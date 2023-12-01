@@ -1,7 +1,8 @@
 import React, {useState} from 'react';
-import {View, StyleSheet} from 'react-native';
+import {View, StyleSheet, Text,TouchableOpacity} from "react-native";
 import TextInputField from '../components/TextInputField';
 import LoginButton from '../components/LoginButton';
+import Title from '../components/Title';
 
 const LoginScreen = () => {
   const [name, setName] = useState('');
@@ -16,8 +17,15 @@ const LoginScreen = () => {
     console.log('Email:', email);
   };
 
+  function handleLoginClick() {
+
+  }
+
   return (
     <View style={styles.container}>
+      <View style={styles.titleContainer}>
+        <Title title="Register Account" />
+      </View>
       <TextInputField
         placeholder="Name"
         value={name}
@@ -40,15 +48,31 @@ const LoginScreen = () => {
         keyboardType="email-address"
       />
       <LoginButton onPress={handleLogin} />
+
+      <View style={styles.titleContainer}>
+        <TouchableOpacity onPress={handleLoginClick}>
+        <Text style={styles.message}>Have an account? Log in</Text>
+        </TouchableOpacity>
+      </View>
     </View>
   );
 };
 
 const styles = StyleSheet.create({
   container: {
-    flex: 1,
+    flex: 0.8,
     justifyContent: 'center',
     padding: 16,
+  },
+  titleContainer: {
+    flex: 0.5,
+    justifyContent: 'flex-start',
+  },
+  message: {
+    textAlign: 'center',
+    marginTop:20,
+    color: 'blue',
+
   },
 });
 
