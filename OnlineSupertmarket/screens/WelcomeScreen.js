@@ -9,7 +9,7 @@ const WelcomeScreen = () => {
   const navigation = useNavigation();
   const handleButtonPress = () => {
     console.log('Button pressed!');
-    navigation.navigate('Login');
+    navigation.navigate('Register');
   };
 
   return (

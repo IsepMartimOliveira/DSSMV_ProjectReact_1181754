@@ -4,7 +4,7 @@ import TextInputField from '../components/TextInputField';
 import LoginButton from '../components/LoginButton';
 import Title from '../components/Title';
 
-const LoginScreen = () => {
+const RegisterScreen = () => {
   const [name, setName] = useState('');
   const [lastName, setLastName] = useState('');
   const [username, setUsername] = useState('');
@@ -76,4 +76,4 @@ const styles = StyleSheet.create({
   },
 });
 
-export default LoginScreen;
+export default RegisterScreen;

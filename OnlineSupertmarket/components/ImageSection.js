@@ -1,7 +1,7 @@
 // ImageSection.js
 import React from 'react';
 import {View, Image, StyleSheet} from 'react-native';
-import welcomeImage from '../Images/25224_294121_10150_image.jpg';
+import welcomeImage from '../assets/25224_294121_10150_image.jpg';
 
 const ImageSection = () => {
   return (
