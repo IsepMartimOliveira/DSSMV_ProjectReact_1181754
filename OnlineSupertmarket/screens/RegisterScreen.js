@@ -1,10 +1,14 @@
 import React, {useState} from 'react';
-import {View, StyleSheet, Text,TouchableOpacity} from "react-native";
+import {View, StyleSheet, Text, TouchableOpacity} from 'react-native';
 import TextInputField from '../components/TextInputField';
 import LoginButton from '../components/LoginButton';
 import Title from '../components/Title';
+import {useNavigation} from '@react-navigation/native';
+import {connectUser} from '../service/Request';
 
 const RegisterScreen = () => {
+  const navigation = useNavigation();
+
   const [name, setName] = useState('');
   const [lastName, setLastName] = useState('');
   const [username, setUsername] = useState('');
@@ -15,11 +19,31 @@ const RegisterScreen = () => {
     console.log('Last Name:', lastName);
     console.log('Username:', username);
     console.log('Email:', email);
+    createUser();
   };
 
   function handleLoginClick() {
-
+    navigation.navigate('Login');
   }
+  const createUser = async () => {
+    try {
+      const userData = {name, lastName, username, email};
+      const response = await connectUser(userData);
+      console.log('Response:', response);
+      if (response.status === 'success') {
+        const { username, hash, spoonacularPassword } = response;
+
+        console.log('Username:', username);
+        console.log('Hash:', hash);
+        console.log('Spoonacular Password:', spoonacularPassword);
+
+      } else {
+        console.error('API Error:', response.status);
+      }
+    } catch (error) {
+      console.error('Error:', error);
+    }
+  };
 
   return (
     <View style={styles.container}>
@@ -51,7 +75,7 @@ const RegisterScreen = () => {
 
       <View style={styles.titleContainer}>
         <TouchableOpacity onPress={handleLoginClick}>
-        <Text style={styles.message}>Have an account? Log in</Text>
+          <Text style={styles.message}>Have an account? Log in</Text>
         </TouchableOpacity>
       </View>
     </View>
@@ -70,9 +94,8 @@ const styles = StyleSheet.create({
   },
   message: {
     textAlign: 'center',
-    marginTop:20,
+    marginTop: 20,
     color: 'blue',
-
   },
 });
 
