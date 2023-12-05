@@ -5,8 +5,11 @@ import LoginButton from '../components/LoginButton';
 import Title from '../components/Title';
 import {useNavigation} from '@react-navigation/native';
 import {connectUser} from '../service/Request';
+import {useUser} from '../context/UserProvider';
+
 
 const RegisterScreen = () => {
+  const {setUser} = useUser();
   const navigation = useNavigation();
 
   const [name, setName] = useState('');
@@ -14,14 +17,53 @@ const RegisterScreen = () => {
   const [username, setUsername] = useState('');
   const [email, setEmail] = useState('');
 
-  const handleLogin = () => {
-    console.log('Name:', name);
-    console.log('Last Name:', lastName);
-    console.log('Username:', username);
-    console.log('Email:', email);
-    createUser();
-  };
+  const [nameError, setNameError] = useState(null);
+  const [lastNameError, setLastNameError] = useState(null);
+  const [usernameError, setUsernameError] = useState(null);
+  const [emailError, setEmailError] = useState(null);
 
+  const handleLogin = () => {
+    if (validateFields()) {
+      console.log('Name:', name);
+      console.log('Last Name:', lastName);
+      console.log('Username:', username);
+      console.log('Email:', email);
+      createUser();
+    }
+  };
+  const validateFields = () => {
+    let isValid = true;
+
+    if (!name.trim()) {
+      setNameError('Field is missing');
+      isValid = false;
+    } else {
+      setNameError(null);
+    }
+
+    if (!lastName.trim()) {
+      setLastNameError('Field is missing');
+      isValid = false;
+    } else {
+      setLastNameError(null);
+    }
+
+    if (!username.trim()) {
+      setUsernameError('Field is missing');
+      isValid = false;
+    } else {
+      setUsernameError(null);
+    }
+
+    if (!email.trim()) {
+      setEmailError('Field is missing');
+      isValid = false;
+    } else {
+      setEmailError(null);
+    }
+
+    return isValid;
+  };
   function handleLoginClick() {
     navigation.navigate('Login');
   }
@@ -31,12 +73,7 @@ const RegisterScreen = () => {
       const response = await connectUser(userData);
       console.log('Response:', response);
       if (response.status === 'success') {
-        const { username, hash, spoonacularPassword } = response;
-
-        console.log('Username:', username);
-        console.log('Hash:', hash);
-        console.log('Spoonacular Password:', spoonacularPassword);
-
+        setUser(response);
       } else {
         console.error('API Error:', response.status);
       }
@@ -54,22 +91,26 @@ const RegisterScreen = () => {
         placeholder="Name"
         value={name}
         onChangeText={text => setName(text)}
+        error={nameError}
       />
       <TextInputField
         placeholder="Last Name"
         value={lastName}
         onChangeText={text => setLastName(text)}
+        error={lastNameError}
       />
       <TextInputField
         placeholder="Username"
         value={username}
         onChangeText={text => setUsername(text)}
+        error={usernameError}
       />
       <TextInputField
         placeholder="Email"
         value={email}
         onChangeText={text => setEmail(text)}
         keyboardType="email-address"
+        error={emailError}
       />
       <LoginButton onPress={handleLogin} />
 

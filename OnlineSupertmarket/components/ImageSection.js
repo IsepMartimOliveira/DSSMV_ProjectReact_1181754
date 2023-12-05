@@ -1,4 +1,3 @@
-// ImageSection.js
 import React from 'react';
 import {View, Image, StyleSheet} from 'react-native';
 import welcomeImage from '../assets/25224_294121_10150_image.jpg';
