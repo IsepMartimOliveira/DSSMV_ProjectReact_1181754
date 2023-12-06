@@ -30,7 +30,7 @@ const LoginScreen = () => {
     const isLoginSuccessful = true;
 
     if (isLoginSuccessful) {
-      navigation.navigate('Home');
+      navigation.navigate('MainTabs');
     } else {
       setErrorMessage('Login failed. Please check your credentials.');
     }
