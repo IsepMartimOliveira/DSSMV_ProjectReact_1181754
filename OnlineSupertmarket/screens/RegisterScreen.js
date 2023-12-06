@@ -74,6 +74,7 @@ const RegisterScreen = () => {
       console.log('Response:', response);
       if (response.status === 'success') {
         setUser(response);
+        navigation.navigate('Login');
       } else {
         console.error('API Error:', response.status);
       }

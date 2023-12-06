@@ -1,15 +1,18 @@
 import React, {useState, useEffect} from 'react';
-import {View, StyleSheet} from 'react-native';
+import {View, StyleSheet,Text} from 'react-native';
 import TextInputField from '../components/TextInputField';
 import Title from '../components/Title';
-import {useNavigation } from "@react-navigation/native";
+import {useNavigation} from '@react-navigation/native';
 import LoginButton from '../components/LoginButton';
 import {useUser} from '../context/UserProvider';
 
 const LoginScreen = () => {
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
+  const [errorMessage, setErrorMessage] = useState('');
+
   const {userData} = useUser();
+  const navigation = useNavigation();
   useEffect(() => {
     if (userData) {
       setUsername(userData.username);
@@ -17,8 +20,20 @@ const LoginScreen = () => {
     }
   }, [userData]);
   const handleLogin = () => {
-    console.log('Username:', username);
-    console.log('Password:', password);
+    const trimmedUsername = username.trim();
+    const trimmedPassword = password.trim();
+
+    if (trimmedUsername === '' || trimmedPassword === '') {
+      setErrorMessage('Please enter both username and password');
+      return;
+    }
+    const isLoginSuccessful = true;
+
+    if (isLoginSuccessful) {
+      navigation.navigate('Home');
+    } else {
+      setErrorMessage('Login failed. Please check your credentials.');
+    }
   };
   return (
     <View style={styles.container}>
@@ -39,6 +54,11 @@ const LoginScreen = () => {
         onChangeText={text => setPassword(text)}
       />
       <LoginButton onPress={handleLogin} />
+      {errorMessage !== '' && (
+        <View style={styles.errorContainer}>
+          <Text style={styles.errorMessage}>{errorMessage}</Text>
+        </View>
+      )}
 
       <View style={styles.titleContainer} />
     </View>
@@ -54,6 +74,16 @@ const styles = StyleSheet.create({
   titleContainer: {
     flex: 0.5,
     justifyContent: 'flex-start',
+  },
+  errorContainer: {
+    marginTop: 10,
+    backgroundColor: 'red',
+    padding: 10,
+    borderRadius: 5,
+  },
+  errorMessage: {
+    color: 'white',
+    textAlign: 'center',
   },
 });
 

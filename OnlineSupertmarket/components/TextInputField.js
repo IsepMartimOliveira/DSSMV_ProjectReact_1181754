@@ -2,7 +2,13 @@
 import React from 'react';
 import { TextInput, View, Text, StyleSheet } from 'react-native';
 
-const TextInputField = ({ placeholder, value, onChangeText, keyboardType, error }) => {
+const TextInputField = ({
+  placeholder,
+  value,
+  onChangeText,
+  keyboardType,
+  error,
+}) => {
   return (
     <View style={styles.container}>
       <TextInput
@@ -34,7 +40,7 @@ const styles = StyleSheet.create({
     color: 'red',
     fontSize: 12,
     marginTop: 5,
-    marginLeft: 8, // Adjust the margin as needed
+    marginLeft: 8,
   },
 });
 
