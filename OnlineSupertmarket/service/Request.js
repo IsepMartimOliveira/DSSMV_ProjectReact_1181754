@@ -23,3 +23,21 @@ export const connectUser = async userData => {
     throw error;
   }
 };
+export const getRecipes = async cuisine => {
+  const url =
+    API_URL + '/recipes/complexSearch' + API_KEY + '&cuisine=' + cuisine;
+  console.log(url);
+
+  try {
+    const response = await fetch(url);
+
+    if (!response.ok) {
+      throw new Error(`HTTP error! Status: ${response.status}`);
+    }
+
+    const data = await response.json();
+    return data;
+  } catch (error) {
+    throw error;
+  }
+};
