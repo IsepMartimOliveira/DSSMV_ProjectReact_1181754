@@ -1,5 +1,5 @@
 import React, {useState, useEffect} from 'react';
-import {View, StyleSheet,Text} from 'react-native';
+import {View, StyleSheet, Text} from 'react-native';
 import TextInputField from '../components/TextInputField';
 import Title from '../components/Title';
 import {useNavigation} from '@react-navigation/native';

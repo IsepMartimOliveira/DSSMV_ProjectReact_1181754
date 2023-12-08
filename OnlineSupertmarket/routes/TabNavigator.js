@@ -5,16 +5,14 @@ import ShoopScreen from '../screens/ShoopScreen';
 import RecipeScreen from '../screens/RecipeScreen';
 import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
 
-
 const Tab = createBottomTabNavigator();
 
-// Define the icons outside the TabNavigator
 const ShoopIcon = ({color, size}) => (
   <MaterialCommunityIcons name="account" color={color} size={size} />
 );
 
 const HomeIcon = ({color, size}) => (
-  <MaterialCommunityIcons name="menu" color={color} size={size} />
+  <MaterialCommunityIcons name="home" color={color} size={size} />
 );
 
 const RecipeIcon = ({color, size}) => (
