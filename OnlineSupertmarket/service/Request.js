@@ -24,12 +24,16 @@ export const connectUser = async userData => {
   }
 };
 export const getRecipes = async cuisine => {
-  const url =
-    API_URL + '/recipes/complexSearch' + API_KEY + '&cuisine=' + cuisine;
+  const url = API_URL + '/recipes/complexSearch' + API_KEY + cuisine;
   console.log(url);
 
   try {
-    const response = await fetch(url);
+    const response = await fetch(url, {
+      method: 'GET',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+    });
 
     if (!response.ok) {
       throw new Error(`HTTP error! Status: ${response.status}`);

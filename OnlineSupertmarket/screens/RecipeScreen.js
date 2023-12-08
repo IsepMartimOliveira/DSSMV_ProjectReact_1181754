@@ -1,15 +1,19 @@
 import React, {useState} from 'react';
-import {StyleSheet, View, Button} from 'react-native';
+import {StyleSheet, View, Button, FlatList} from 'react-native';
 import ModalSelector from 'react-native-modal-selector';
 import {getRecipes} from '../service/Request';
 import cuisines from '../others/Cuisines';
 import intolerances from '../others/Intolerances';
 import type from '../others/Type';
+import TextOutput from '../components/TextOutput';
+import ImageComponent from '../components/ImageComponent';
 
 const RecipeScreen = () => {
+  const [recipes, setRecipes] = useState([]);
   const [selectedCuisine, setSelectedCuisine] = useState('Select Cuisine');
-  const [selectedIntolerances, setselectedIntolerances] = useState('Select Intolorence');
+  const [selectedIntolerances, setselectedIntolerances] = useState('Select Intolerance');
   const [selectedType, setselectedType] = useState('Select Type');
+
   const buildRecipeUrl = () => {
     let url = '';
 
@@ -17,7 +21,10 @@ const RecipeScreen = () => {
       url += '&cuisine=' + selectedCuisine;
     }
 
-    if (selectedIntolerances !== 'Select Intolorence' && selectedIntolerances !== 'None') {
+    if (
+      selectedIntolerances !== 'Select Intolerance' &&
+      selectedIntolerances !== 'None'
+    ) {
       url += '&intolerances=' + selectedIntolerances;
     }
 
@@ -27,6 +34,7 @@ const RecipeScreen = () => {
 
     return url;
   };
+
   const handleGetRecipes = async () => {
     try {
       const url = buildRecipeUrl();
@@ -38,10 +46,11 @@ const RecipeScreen = () => {
       const response = await getRecipes(url);
       console.log('Response:', response);
 
-      if (response.status === 'success') {
-        console.log('Success:', response.data);
+      if (response.results) {
+        console.log('Success:', response.results);
+        setRecipes(response.results);
       } else {
-        console.error('API Error:', response.status);
+        console.error('API Error:', response);
       }
     } catch (error) {
       console.error('Error:', error);
@@ -86,6 +95,18 @@ const RecipeScreen = () => {
       <View style={styles.buttonContainer}>
         <Button title="Get Recipes" onPress={handleGetRecipes} />
       </View>
+      <View style={styles.flatListContainer}>
+        <FlatList
+          data={recipes}
+          keyExtractor={item => item.id.toString()}
+          renderItem={({item}) => (
+            <View style={styles.recipeContainer}>
+              <TextOutput textOutput={item.title} />
+              <ImageComponent imageUrl={item.image} />
+            </View>
+          )}
+        />
+      </View>
     </View>
   );
 };
@@ -110,6 +131,13 @@ const styles = StyleSheet.create({
   },
   buttonContainer: {
     marginTop: 20,
+  },
+  flatListContainer: {
+    flex: 1,
+    marginTop: 20,
+  },
+  recipeContainer: {
+    marginBottom: 5,
   },
 });
 
