@@ -2,7 +2,7 @@ import React, {useState} from 'react';
 import {View, TouchableOpacity, StyleSheet} from 'react-native';
 import TextOutput from '../components/TextOutput';
 
-const ExpandableBox = ({ title, content }) => {
+const ExpandableBox = ({title, content}) => {
   const [expanded, setExpanded] = useState(false);
 
   const toggleBox = () => {

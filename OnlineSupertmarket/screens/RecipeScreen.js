@@ -19,15 +19,16 @@ import ExpandableBox from '../components/ExpandableBox';
 import DetailsContent from '../components/DetailsContent';
 import SummaryContent from '../components/SummaryContent';
 import IngredientContent from '../components/IngridientsContent';
+import LoadingSpinner from '../components/LoadingSpinner'
 
 const RecipeScreen = () => {
   const [recipes, setRecipes] = useState([]);
   const [selectedCuisine, setSelectedCuisine] = useState('Select Cuisine');
-  const [selectedIntolerances, setselectedIntolerances] =
-    useState('Select Intolerance');
+  const [selectedIntolerances, setselectedIntolerances] = useState('Select Intolerance');
   const [selectedType, setselectedType] = useState('Select Type');
   const [recipeDetails, setRecipeDetails] = useState(null);
   const [modalVisible, setModalVisible] = useState(false);
+  const [loading, setLoading] = useState(false);
 
   const buildRecipeUrl = () => {
     let url = '';
@@ -51,6 +52,8 @@ const RecipeScreen = () => {
   };
   const fetchRecipeDetails = async recipeId => {
     try {
+      setLoading(true);
+      console.log('Loading 1:',loading);
       const response = await getRecipeDetails(recipeId);
       console.log('Recipe Details Response:', response);
       console.log('Status', response.status);
@@ -84,15 +87,20 @@ const RecipeScreen = () => {
       }
     } catch (error) {
       console.error('Error fetching recipe details:', error);
+    } finally {
+      setLoading(false);
+      console.log('Loading 2:', loading);
     }
   };
   const handleGetRecipes = async () => {
     try {
+
       const url = buildRecipeUrl();
       if (selectedCuisine === 'Select Cuisine') {
         console.error('Please select a cuisine');
         return;
       }
+      setLoading(true);
 
       const response = await getRecipes(url);
       console.log('Response:', response);
@@ -105,6 +113,8 @@ const RecipeScreen = () => {
       }
     } catch (error) {
       console.error('Error:', error);
+    }finally {
+      setLoading(false);
     }
   };
 
@@ -144,6 +154,7 @@ const RecipeScreen = () => {
         />
       </View>
       <View style={styles.buttonContainer}>
+        {loading && <LoadingSpinner />}
         <Button title="Get Recipes" onPress={handleGetRecipes} />
       </View>
       <View style={styles.flatListContainer}>
@@ -153,6 +164,7 @@ const RecipeScreen = () => {
           renderItem={({item}) => (
             <View style={styles.recipeContainer}>
               <TouchableOpacity onPress={() => fetchRecipeDetails(item.id)}>
+
                 <TextOutput textOutput={item.title} />
                 <ImageComponent imageUrl={item.image} />
               </TouchableOpacity>
@@ -226,7 +238,7 @@ const styles = StyleSheet.create({
     marginTop: 20,
   },
   recipeContainer: {
-    marginBottom: 5,
+    marginBottom: 25,
   },
   modalContainer: {
     padding: 16,
