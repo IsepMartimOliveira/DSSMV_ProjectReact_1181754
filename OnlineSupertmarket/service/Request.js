@@ -72,3 +72,25 @@ export const getRecipeDetails = async recipeID => {
     throw error;
   }
 };
+export const addIngredient = async (username, hash,name) => {
+  const url = API_URL + '/mealplanner/' + username +'/shopping-list/items' + API_KEY + '&hash=' + hash;
+  console.log('URLADDING', url);
+  try {
+    const response = await fetch(url, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({item: name}),
+    });
+
+    if (!response.ok) {
+      throw new Error(`HTTP error! Status: ${response.status}`);
+    }
+
+    const data = await response.json();
+    return data;
+  } catch (error) {
+    throw error;
+  }
+};
