@@ -6,9 +6,10 @@ import {
   FlatList,
   Modal,
   TouchableOpacity,
+  Alert,
 } from 'react-native';
 import ModalSelector from 'react-native-modal-selector';
-import {getRecipeDetails, getRecipes} from '../service/Request';
+import { addIngredient, getRecipeDetails, getRecipes } from '../service/Request';
 import cuisines from '../others/Cuisines';
 import intolerances from '../others/Intolerances';
 import type from '../others/Type';
@@ -19,9 +20,11 @@ import ExpandableBox from '../components/ExpandableBox';
 import DetailsContent from '../components/DetailsContent';
 import SummaryContent from '../components/SummaryContent';
 import IngredientContent from '../components/IngridientsContent';
-import LoadingSpinner from '../components/LoadingSpinner'
+import LoadingSpinner from '../components/LoadingSpinner';
+import { useUser } from '../context/UserProvider';
 
 const RecipeScreen = () => {
+  const {userData} = useUser();
   const [recipes, setRecipes] = useState([]);
   const [selectedCuisine, setSelectedCuisine] = useState('Select Cuisine');
   const [selectedIntolerances, setselectedIntolerances] = useState('Select Intolerance');
@@ -92,9 +95,33 @@ const RecipeScreen = () => {
       console.log('Loading 2:', loading);
     }
   };
+
+
+  const handleAddAllIngredients = async () => {
+    const {username, hash} = userData;
+    try {
+      setLoading(true);
+
+      const {extendedIngredients} = recipeDetails;
+
+      for (const ingredient of extendedIngredients) {
+        const {name} = ingredient;
+        await addIngredient(username, hash, name);
+      }
+      Alert.alert(
+        'Ingredients Added',
+        'The ingredients has been added to your cart.',
+      );
+      setModalVisible(false);
+    } catch (error) {
+      console.error('Error adding all ingredients:', error);
+    } finally {
+      setLoading(false);
+    }
+  };
+
   const handleGetRecipes = async () => {
     try {
-
       const url = buildRecipeUrl();
       if (selectedCuisine === 'Select Cuisine') {
         console.error('Please select a cuisine');
@@ -113,7 +140,7 @@ const RecipeScreen = () => {
       }
     } catch (error) {
       console.error('Error:', error);
-    }finally {
+    } finally {
       setLoading(false);
     }
   };
@@ -202,7 +229,11 @@ const RecipeScreen = () => {
                     ) : null
                   }
                 />
-                <Button title="Close" onPress={() => setModalVisible(false)} />
+                <Button
+                  style={styles.buttonAddAll}
+                  title="Add all"
+                  onPress={handleAddAllIngredients}
+                />
               </View>
             )}
           </View>
@@ -242,6 +273,12 @@ const styles = StyleSheet.create({
   },
   modalContainer: {
     padding: 16,
+  },
+  buttonAddAll:{
+    marginTop: 10,
+  },
+  CLOSE: {
+    marginBottom: 20,
   },
 });
 

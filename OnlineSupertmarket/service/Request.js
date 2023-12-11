@@ -73,7 +73,7 @@ export const getRecipeDetails = async recipeID => {
   }
 };
 export const addIngredient = async (username, hash,name) => {
-  const url = API_URL + '/mealplanner/' + username +'/shopping-list/items' + API_KEY + '&hash=' + hash;
+  const url =API_URL + '/mealplanner/' + username +'/shopping-list/items' + API_KEY + '&hash=' + hash;
   console.log('URLADDING', url);
   try {
     const response = await fetch(url, {
@@ -82,6 +82,28 @@ export const addIngredient = async (username, hash,name) => {
         'Content-Type': 'application/json',
       },
       body: JSON.stringify({item: name}),
+    });
+
+    if (!response.ok) {
+      throw new Error(`HTTP error! Status: ${response.status}`);
+    }
+
+    const data = await response.json();
+    return data;
+  } catch (error) {
+    throw error;
+  }
+};
+export const getShoppingCart = async (username,hash) => {
+  const url = API_URL + '/mealplanner/' + username + '/shopping-list' + API_KEY + '&hash=' + hash;
+  console.log(url);
+
+  try {
+    const response = await fetch(url, {
+      method: 'GET',
+      headers: {
+        'Content-Type': 'application/json',
+      },
     });
 
     if (!response.ok) {

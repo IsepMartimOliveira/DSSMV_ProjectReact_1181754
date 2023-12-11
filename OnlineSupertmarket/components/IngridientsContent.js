@@ -1,9 +1,11 @@
-import React, {useState } from 'react';
-import {View, StyleSheet, Button, Alert} from 'react-native';
+import React, {useState} from 'react';
+import {View, StyleSheet, Alert, TouchableOpacity} from 'react-native';
 import TextOutput from './TextOutput';
 import ImageIngridient from './ImageIngridient';
 import {useUser} from '../context/UserProvider';
 import {addIngredient} from '../service/Request';
+
+
 
 const IngredientContent = ({name, image}) => {
   const {userData} = useUser();
@@ -38,21 +40,30 @@ const IngredientContent = ({name, image}) => {
       setLoading(false);
     }
   };
+  const handleContainerPress = () => {
+    Alert.alert(
+      'Add Ingredient',
+      `Do you want to add ${name} to your cart?`,
+      [
+        {text: 'Cancel', style: 'cancel'},
+        {text: 'Add', onPress: handleAdd},
+      ],
+      {cancelable: true},
+    );
+  };
+
 
   return (
     <View style={styles.container}>
-      <TextOutput textOutput={name} />
-      <ImageIngridient
-        imageUrl={'https://spoonacular.com/cdn/ingredients_100x100/' + image}
-        style={styles.image}
-      />
-      <View style={styles.space} />
-      <Button
-        title="Add Ingredient"
-        onPress={handleAdd}
-        disabled={loading}
-        style={styles.button}
-      />
+      <TouchableOpacity onPress={handleContainerPress} style={styles.container}>
+        <TextOutput textOutput={name} />
+        <ImageIngridient
+          imageUrl={
+            'https://spoonacular.com/cdn/ingredients_100x100/' + image
+          }
+          style={styles.image}
+        />
+      </TouchableOpacity>
     </View>
   );
 };
@@ -62,11 +73,7 @@ const styles = StyleSheet.create({
     flexDirection: 'column',
     alignItems: 'center',
     height: 500,
-    marginBottom: -225,
-  },
-  space: {
-    width: 10,
-    height: 10,
+    marginBottom: -250,
   },
 });
 

@@ -20,7 +20,7 @@ const RecipeIcon = ({color, size}) => (
 );
 
 const TabNavigator = () => (
-  <Tab.Navigator>
+  <Tab.Navigator initialRouteName='Home'>
     <Tab.Screen
       name="Shoop"
       component={ShoopScreen}
