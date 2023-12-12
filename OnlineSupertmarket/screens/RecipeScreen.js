@@ -9,7 +9,7 @@ import {
   Alert,
 } from 'react-native';
 import ModalSelector from 'react-native-modal-selector';
-import { addIngredient, getRecipeDetails, getRecipes } from '../service/Request';
+import {addIngredient, getRecipeDetails, getRecipes} from '../service/Request';
 import cuisines from '../others/Cuisines';
 import intolerances from '../others/Intolerances';
 import type from '../others/Type';
@@ -21,7 +21,7 @@ import DetailsContent from '../components/DetailsContent';
 import SummaryContent from '../components/SummaryContent';
 import IngredientContent from '../components/IngridientsContent';
 import LoadingSpinner from '../components/LoadingSpinner';
-import { useUser } from '../context/UserProvider';
+import {useUser} from '../context/UserProvider';
 
 const RecipeScreen = () => {
   const {userData} = useUser();
@@ -56,7 +56,7 @@ const RecipeScreen = () => {
   const fetchRecipeDetails = async recipeId => {
     try {
       setLoading(true);
-      console.log('Loading 1:',loading);
+      console.log('Loading 1:', loading);
       const response = await getRecipeDetails(recipeId);
       console.log('Recipe Details Response:', response);
       console.log('Status', response.status);
@@ -95,7 +95,6 @@ const RecipeScreen = () => {
       console.log('Loading 2:', loading);
     }
   };
-
 
   const handleAddAllIngredients = async () => {
     const {username, hash} = userData;

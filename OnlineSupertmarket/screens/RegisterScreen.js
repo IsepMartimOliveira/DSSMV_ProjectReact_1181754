@@ -6,6 +6,8 @@ import Title from '../components/Title';
 import {useNavigation} from '@react-navigation/native';
 import {connectUser} from '../service/Request';
 import {useUser} from '../context/UserProvider';
+import LoadingSpinner from '../components/LoadingSpinner';
+
 
 
 const RegisterScreen = () => {
@@ -22,13 +24,23 @@ const RegisterScreen = () => {
   const [usernameError, setUsernameError] = useState(null);
   const [emailError, setEmailError] = useState(null);
 
-  const handleLogin = () => {
+  const [loading, setLoading] = useState(false);
+
+
+  const handleLogin = async () => {
     if (validateFields()) {
       console.log('Name:', name);
       console.log('Last Name:', lastName);
       console.log('Username:', username);
       console.log('Email:', email);
-      createUser();
+      try {
+        setLoading(true);
+        await createUser();
+      } catch (error) {
+        console.error('Error:', error);
+      } finally {
+        setLoading(false);
+      }
     }
   };
   const validateFields = () => {
@@ -113,6 +125,9 @@ const RegisterScreen = () => {
         keyboardType="email-address"
         error={emailError}
       />
+
+      {loading && <LoadingSpinner />}
+
       <LoginButton onPress={handleLogin} />
 
       <View style={styles.titleContainer}>
