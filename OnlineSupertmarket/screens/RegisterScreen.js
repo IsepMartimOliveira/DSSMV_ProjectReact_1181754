@@ -3,15 +3,12 @@ import {View, StyleSheet, Text, TouchableOpacity} from 'react-native';
 import TextInputField from '../components/TextInputField';
 import LoginButton from '../components/LoginButton';
 import Title from '../components/Title';
-import {useNavigation} from '@react-navigation/native';
-import {connectUser} from '../service/Request';
-import {useUser} from '../context/UserProvider';
 import LoadingSpinner from '../components/LoadingSpinner';
-
-
+import useUserService from '../service/UserService';
+import {useNavigation} from '@react-navigation/native';
 
 const RegisterScreen = () => {
-  const {setUser} = useUser();
+  const {processUser} = useUserService();
   const navigation = useNavigation();
 
   const [name, setName] = useState('');
@@ -26,21 +23,12 @@ const RegisterScreen = () => {
 
   const [loading, setLoading] = useState(false);
 
-
   const handleLogin = async () => {
     if (validateFields()) {
-      console.log('Name:', name);
-      console.log('Last Name:', lastName);
-      console.log('Username:', username);
-      console.log('Email:', email);
-      try {
-        setLoading(true);
-        await createUser();
-      } catch (error) {
-        console.error('Error:', error);
-      } finally {
-        setLoading(false);
-      }
+      setLoading(true);
+      const userData = {name, lastName, username, email};
+      await processUser(userData);
+      setLoading(false);
     }
   };
   const validateFields = () => {
@@ -79,21 +67,6 @@ const RegisterScreen = () => {
   function handleLoginClick() {
     navigation.navigate('Login');
   }
-  const createUser = async () => {
-    try {
-      const userData = {name, lastName, username, email};
-      const response = await connectUser(userData);
-      console.log('Response:', response);
-      if (response.status === 'success') {
-        setUser(response);
-        navigation.navigate('Login');
-      } else {
-        console.error('API Error:', response.status);
-      }
-    } catch (error) {
-      console.error('Error:', error);
-    }
-  };
 
   return (
     <View style={styles.container}>

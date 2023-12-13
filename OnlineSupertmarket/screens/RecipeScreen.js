@@ -6,10 +6,8 @@ import {
   FlatList,
   Modal,
   TouchableOpacity,
-  Alert,
 } from 'react-native';
 import ModalSelector from 'react-native-modal-selector';
-import {addIngredient, getRecipeDetails, getRecipes} from '../service/Request';
 import cuisines from '../others/Cuisines';
 import intolerances from '../others/Intolerances';
 import type from '../others/Type';
@@ -21,17 +19,19 @@ import DetailsContent from '../components/DetailsContent';
 import SummaryContent from '../components/SummaryContent';
 import IngredientContent from '../components/IngridientsContent';
 import LoadingSpinner from '../components/LoadingSpinner';
-import {useUser} from '../context/UserProvider';
+import useRecipeService from '../service/RecipeService';
 
 const RecipeScreen = () => {
-  const {userData} = useUser();
   const [recipes, setRecipes] = useState([]);
   const [selectedCuisine, setSelectedCuisine] = useState('Select Cuisine');
-  const [selectedIntolerances, setselectedIntolerances] = useState('Select Intolerance');
+  const [selectedIntolerances, setselectedIntolerances] =
+    useState('Select Intolerance');
   const [selectedType, setselectedType] = useState('Select Type');
   const [recipeDetails, setRecipeDetails] = useState(null);
   const [modalVisible, setModalVisible] = useState(false);
   const [loading, setLoading] = useState(false);
+  const {processRecipeDetails, processRecipes, addAllIngredientsToCart} =
+    useRecipeService();
 
   const buildRecipeUrl = () => {
     let url = '';
@@ -53,95 +53,23 @@ const RecipeScreen = () => {
 
     return url;
   };
+
   const fetchRecipeDetails = async recipeId => {
-    try {
-      setLoading(true);
-      console.log('Loading 1:', loading);
-      const response = await getRecipeDetails(recipeId);
-      console.log('Recipe Details Response:', response);
-      console.log('Status', response.status);
-
-      if (response) {
-        const {
-          healthScore,
-          spoonacularScore,
-          pricePerServing,
-          summary,
-          extendedIngredients,
-        } = response;
-
-        console.log('Health Score:', healthScore);
-        console.log('Spoonacular Score:', spoonacularScore);
-        console.log('Price Per Serving:', pricePerServing);
-        console.log('Price Per Serving:', summary);
-        if (extendedIngredients && extendedIngredients.length > 0) {
-          console.log('Extended Ingredients:');
-          extendedIngredients.forEach(ingredient => {
-            const {name, image} = ingredient;
-            console.log('Name:', name);
-            console.log('Image:', image);
-          });
-        }
-
-        setRecipeDetails(response);
-        setModalVisible(true);
-      } else {
-        console.error('Recipe Details API Error:', response.status);
-      }
-    } catch (error) {
-      console.error('Error fetching recipe details:', error);
-    } finally {
-      setLoading(false);
-      console.log('Loading 2:', loading);
-    }
+    await processRecipeDetails(
+      recipeId,
+      setLoading,
+      setRecipeDetails,
+      setModalVisible,
+    );
   };
 
   const handleAddAllIngredients = async () => {
-    const {username, hash} = userData;
-    try {
-      setLoading(true);
-
-      const {extendedIngredients} = recipeDetails;
-
-      for (const ingredient of extendedIngredients) {
-        const {name} = ingredient;
-        await addIngredient(username, hash, name);
-      }
-      Alert.alert(
-        'Ingredients Added',
-        'The ingredients has been added to your cart.',
-      );
-      setModalVisible(false);
-    } catch (error) {
-      console.error('Error adding all ingredients:', error);
-    } finally {
-      setLoading(false);
-    }
+    await addAllIngredientsToCart(recipeDetails, setLoading, setModalVisible);
   };
 
   const handleGetRecipes = async () => {
-    try {
-      const url = buildRecipeUrl();
-      if (selectedCuisine === 'Select Cuisine') {
-        console.error('Please select a cuisine');
-        return;
-      }
-      setLoading(true);
-
-      const response = await getRecipes(url);
-      console.log('Response:', response);
-
-      if (response.results) {
-        console.log('Success:', response.results);
-        setRecipes(response.results);
-      } else {
-        console.error('API Error:', response);
-      }
-    } catch (error) {
-      console.error('Error:', error);
-    } finally {
-      setLoading(false);
-    }
+    const url = buildRecipeUrl();
+    await processRecipes(url, selectedCuisine, setLoading, setRecipes);
   };
 
   return (
@@ -190,7 +118,6 @@ const RecipeScreen = () => {
           renderItem={({item}) => (
             <View style={styles.recipeContainer}>
               <TouchableOpacity onPress={() => fetchRecipeDetails(item.id)}>
-
                 <TextOutput textOutput={item.title} />
                 <ImageComponent imageUrl={item.image} />
               </TouchableOpacity>
@@ -214,6 +141,7 @@ const RecipeScreen = () => {
                   title="Summary"
                   content={<SummaryContent {...recipeDetails} />}
                 />
+
                 <ExpandableBox
                   title="Ingredients"
                   content={
@@ -273,7 +201,7 @@ const styles = StyleSheet.create({
   modalContainer: {
     padding: 16,
   },
-  buttonAddAll:{
+  buttonAddAll: {
     marginTop: 10,
   },
   CLOSE: {

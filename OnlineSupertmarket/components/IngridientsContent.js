@@ -2,43 +2,15 @@ import React, {useState} from 'react';
 import {View, StyleSheet, Alert, TouchableOpacity} from 'react-native';
 import TextOutput from './TextOutput';
 import ImageIngridient from './ImageIngridient';
-import {useUser} from '../context/UserProvider';
-import {addIngredient} from '../service/Request';
-
-
+import useRecipeService from '../service/RecipeService';
+import LoadingSpinner from './LoadingSpinner';
 
 const IngredientContent = ({name, image}) => {
-  const {userData} = useUser();
-  console.log('userData:', userData);
+  const {addIngredientToCart} = useRecipeService();
   const [loading, setLoading] = useState(false);
 
   const handleAdd = async () => {
-    try {
-      setLoading(true);
-
-      if (!userData) {
-        console.error('User data is not available');
-        return;
-      }
-
-      const {username, hash} = userData;
-      if (!username || !hash) {
-        console.error('Username or hash is not available');
-        return;
-      }
-
-      const response = await addIngredient(username, hash, name);
-      console.log('Add', response);
-      console.log('Before Alert');
-      Alert.alert(
-        'Ingredient Added',
-        'The ingredient has been added to your cart.',
-      );
-    } catch (error) {
-      console.error('ErrorReq:', error);
-    } finally {
-      setLoading(false);
-    }
+    await addIngredientToCart(setLoading, name);
   };
   const handleContainerPress = () => {
     Alert.alert(
@@ -52,15 +24,14 @@ const IngredientContent = ({name, image}) => {
     );
   };
 
-
   return (
     <View style={styles.container}>
       <TouchableOpacity onPress={handleContainerPress} style={styles.container}>
+        {loading && <LoadingSpinner />}
+
         <TextOutput textOutput={name} />
         <ImageIngridient
-          imageUrl={
-            'https://spoonacular.com/cdn/ingredients_100x100/' + image
-          }
+          imageUrl={'https://spoonacular.com/cdn/ingredients_100x100/' + image}
           style={styles.image}
         />
       </TouchableOpacity>
