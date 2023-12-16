@@ -1,18 +1,23 @@
 import React, {useState} from 'react';
-import { View, FlatList, Text, Alert,StyleSheet } from "react-native";
+import {View, FlatList, Text, Alert, StyleSheet} from 'react-native';
 import {useFocusEffect} from '@react-navigation/native';
 import {useUser} from '../context/UserProvider';
-import { deleteItem, getShoppingCart } from "../service/Request";
+import {deleteItem, getShoppingCart} from '../service/Request';
 import ShoppingCartItem from '../components/ShoopingCartItem';
 import ShoppingCartActions from '../components/ShoppingCartActions';
-import TextOutput from "../components/TextOutput";
+import MapComponent from '../components/MapComponent';
 
 const ShoppingCartScreen = () => {
   const {userData} = useUser();
   const [names, setNames] = useState([]);
   const [ids, setIds] = useState([]);
   const [costs, setCosts] = useState([]);
+  const [showMap, setShowMap] = useState(false);
+  const [totalCost, setTotalCost] = useState(0);
 
+  const handleCloseMap = () => {
+    setShowMap(false);
+  };
   const fetchData = async () => {
     try {
       if (!userData) {
@@ -20,7 +25,7 @@ const ShoppingCartScreen = () => {
         return;
       }
 
-      const { username, hash } = userData;
+      const {username, hash} = userData;
       if (!username || !hash) {
         console.error('Username or hash is not available');
         return;
@@ -28,20 +33,22 @@ const ShoppingCartScreen = () => {
 
       const response = await getShoppingCart(username, hash);
       if (response) {
-        const { aisles, cost, id } = response;
-        const nameList = aisles.flatMap((aisle) =>
-          aisle.items.map((item) => item.name)
+        const {aisles, cost, id} = response;
+        const nameList = aisles.flatMap(aisle =>
+          aisle.items.map(item => item.name),
         );
-        const idList = aisles.flatMap((aisle) =>
-          aisle.items.map((item) => item.id)
+        const idList = aisles.flatMap(aisle =>
+          aisle.items.map(item => item.id),
         );
-        const costList = aisles.flatMap((aisle) =>
-          aisle.items.map((item) => item.cost)
+        const costList = aisles.flatMap(aisle =>
+          aisle.items.map(item => item.cost),
         );
 
         setNames(nameList);
         setIds(idList);
         setCosts(costList);
+        const newTotalCost = costList.reduce((sum, cost) => sum + cost, 0);
+        setTotalCost(newTotalCost);
       }
     } catch (error) {
       console.error('ErrorReq:', error);
@@ -51,7 +58,7 @@ const ShoppingCartScreen = () => {
   useFocusEffect(
     React.useCallback(() => {
       fetchData();
-    }, [userData])
+    }, [userData]),
   );
   const handleDelete = async index => {
     console.log('Deleting item at index:', index);
@@ -65,6 +72,8 @@ const ShoppingCartScreen = () => {
           'Ingredients Deleted',
           'The ingredient have been deleted from your cart.',
         );
+        const newTotalCost = totalCost - costs[index];
+        setTotalCost(newTotalCost);
         fetchData();
       }
     } catch (error) {
@@ -75,7 +84,7 @@ const ShoppingCartScreen = () => {
   const pressDelete = index => {
     Alert.alert(
       'Delete Ingredient',
-      `Do you want to delete the item?`,
+      'Do you want to delete the item?',
       [
         {text: 'Cancel', style: 'cancel'},
         {text: 'Delete', onPress: () => handleDelete(index)},
@@ -86,7 +95,7 @@ const ShoppingCartScreen = () => {
   const pressDeleteAll = index => {
     Alert.alert(
       'Delete all Ingredients',
-      `Do you want to delete all itemns?`,
+      'Do you want to delete all itemns?',
       [
         {text: 'Cancel', style: 'cancel'},
         {text: 'Delete', onPress: () => handleDeleteAll(index)},
@@ -97,6 +106,7 @@ const ShoppingCartScreen = () => {
 
   const handleCheckOut = () => {
     console.log('Checkout pressed');
+    setShowMap(true);
   };
 
   const handleDeleteAll = async () => {
@@ -135,10 +145,14 @@ const ShoppingCartScreen = () => {
           />
         )}
       />
+      <Text style={styles.totalCost}>Total Cost: ${totalCost.toFixed(2)}</Text>
+
       <ShoppingCartActions
         onDeletePress={() => pressDeleteAll()}
         onCheckoutPress={() => handleCheckOut()}
       />
+
+      {showMap && <MapComponent onCloseMap={handleCloseMap} />}
     </View>
   );
 };
@@ -153,5 +167,9 @@ const styles = StyleSheet.create({
     fontSize: 20,
     fontWeight: 'bold',
   },
+  totalCost:{
+    textAlign: 'right',
+    fontSize:20
+  }
 });
 export default ShoppingCartScreen;
