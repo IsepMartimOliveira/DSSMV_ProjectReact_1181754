@@ -5,6 +5,7 @@ import WelcomeScreen from '../screens/WelcomeScreen';
 import RegisterScreen from '../screens/RegisterScreen';
 import LoginScreen from '../screens/LoginScreen';
 import TabNavigator from './TabNavigator';
+import MapScreen from '../screens/MapScreen';
 
 const Stack = createStackNavigator();
 
@@ -30,6 +31,11 @@ const MainStack = () => {
         options={{headerShown: false}}
         name="MainTabs"
         component={TabNavigator}
+      />
+      <Stack.Screen
+        options={{headerShown: false}}
+        name="Map"
+        component={MapScreen}
       />
     </Stack.Navigator>
   );
