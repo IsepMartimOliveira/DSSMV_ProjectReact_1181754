@@ -1,23 +1,37 @@
 import React, {useState} from 'react';
 import {View, FlatList, Text, Alert, StyleSheet} from 'react-native';
-import { useFocusEffect, useNavigation } from "@react-navigation/native";
+import {useFocusEffect, useNavigation} from '@react-navigation/native';
 import {useUser} from '../context/UserProvider';
 import {deleteItem, getShoppingCart} from '../service/Request';
 import ShoppingCartItem from '../components/ShoopingCartItem';
 import ShoppingCartActions from '../components/ShoppingCartActions';
-import MapComponent from '../components/MapComponent';
-import MapScreen from "./MapScreen";
 
-const ShoppingCartScreen = () => {
+
+const ShoppingCartScreen = ({route}) => {
   const {userData} = useUser();
   const [names, setNames] = useState([]);
   const [ids, setIds] = useState([]);
   const [costs, setCosts] = useState([]);
   const [totalCost, setTotalCost] = useState(0);
   const navigation=useNavigation();
-
-
-
+  const selectedStreet = route.params?.selectedStreet;
+  React.useEffect(() => {
+    if (selectedStreet) {
+      Alert.alert(
+        'Checkout',
+        `Adress: ${selectedStreet.street}\nTotal Cost: $${totalCost.toFixed(2)}`,
+        [
+          {
+            text: 'OK',
+            onPress: () => {
+              handleDeleteAll();
+            },
+          },
+        ],
+        {cancelable: false},
+      );
+    }
+  }, [selectedStreet]);
   const fetchData = async () => {
     try {
       if (!userData) {
