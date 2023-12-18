@@ -4,20 +4,16 @@ import HomePageScreen from '../screens/HomePageScreen';
 import ShoopScreen from '../screens/ShoopScreen';
 import RecipeScreen from '../screens/RecipeScreen';
 import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
+import Base64Image from "../components/Base64Image";
+import { base_64_home, base_64_recipe, base_64_shoop } from "../others/StringsImage";
 
 const Tab = createBottomTabNavigator();
 
-const ShoopIcon = ({color, size}) => (
-  <MaterialCommunityIcons name="account" color={color} size={size} />
-);
+const ShoopIcon = () => (<Base64Image base64String={base_64_shoop} width={30} height={30}/>);
 
-const HomeIcon = ({color, size}) => (
-  <MaterialCommunityIcons name="home" color={color} size={size} />
-);
+const HomeIcon = () => (<Base64Image base64String={base_64_home} width={30} height={30} />);
 
-const RecipeIcon = ({color, size}) => (
-  <MaterialCommunityIcons name="book" color={color} size={size} />
-);
+const RecipeIcon = () => (<Base64Image base64String={base_64_recipe} width={30} height={30}/>);
 
 const TabNavigator = () => (
   <Tab.Navigator initialRouteName='Home'>

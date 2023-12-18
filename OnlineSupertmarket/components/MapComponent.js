@@ -1,7 +1,7 @@
-import React, { useState } from "react";
-import { View, StyleSheet, Button, Alert } from "react-native";
-import MapView, { Marker } from 'react-native-maps';
-import { useNavigation } from '@react-navigation/native';
+import React, {useState} from 'react';
+import {View, StyleSheet, Button, Alert} from 'react-native';
+import MapView, {Marker} from 'react-native-maps';
+import {useNavigation} from '@react-navigation/native';
 import Geocoder from 'react-native-geocoding';
 
 const MapComponent = () => {
@@ -35,8 +35,7 @@ const MapComponent = () => {
         style={styles.map}
         showsUserLocation
         onPress={handleMapPress}
-        provider={MapView.PROVIDER_GOOGLE}
-      >
+        provider={MapView.PROVIDER_GOOGLE}>
         {selectedStreet && (
           <Marker
             coordinate={selectedStreet.coordinate}
