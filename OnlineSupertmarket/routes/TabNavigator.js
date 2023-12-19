@@ -3,9 +3,12 @@ import {createBottomTabNavigator} from '@react-navigation/bottom-tabs';
 import HomePageScreen from '../screens/HomePageScreen';
 import ShoopScreen from '../screens/ShoopScreen';
 import RecipeScreen from '../screens/RecipeScreen';
-import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
-import Base64Image from "../components/Base64Image";
-import { base_64_home, base_64_recipe, base_64_shoop } from "../others/StringsImage";
+import Base64Image from '../components/Base64Image';
+import {
+  base_64_home,
+  base_64_recipe,
+  base_64_shoop,
+} from '../others/StringsImage';
 
 const Tab = createBottomTabNavigator();
 

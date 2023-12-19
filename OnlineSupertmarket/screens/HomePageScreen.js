@@ -1,13 +1,12 @@
 import Title from '../components/Title';
 import {StyleSheet, View} from 'react-native';
 import React from 'react';
+import MovementComponent from '../components/MovementComponent';
 
 const HomePageScreen = () => {
   return (
     <View style={styles.container}>
-      <View style={styles.titleContainer}>
-        <Title title="Home" />
-      </View>
+      <MovementComponent/>
     </View>
   );
 };
@@ -16,10 +15,6 @@ const styles = StyleSheet.create({
     flex: 0.8,
     justifyContent: 'center',
     padding: 16,
-  },
-  titleContainer: {
-    flex: 0.5,
-    justifyContent: 'flex-start',
   },
 });
 

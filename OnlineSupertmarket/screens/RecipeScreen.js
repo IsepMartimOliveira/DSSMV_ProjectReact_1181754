@@ -24,12 +24,14 @@ import useRecipeService from '../service/RecipeService';
 const RecipeScreen = () => {
   const [recipes, setRecipes] = useState([]);
   const [selectedCuisine, setSelectedCuisine] = useState('Select Cuisine');
-  const [selectedIntolerances, setselectedIntolerances] = useState('Select Intolerance');
+  const [selectedIntolerances, setselectedIntolerances] =
+    useState('Select Intolerance');
   const [selectedType, setselectedType] = useState('Select Type');
   const [recipeDetails, setRecipeDetails] = useState(null);
   const [modalVisible, setModalVisible] = useState(false);
   const [loading, setLoading] = useState(false);
-  const {processRecipeDetails, processRecipes, addAllIngredientsToCart} = useRecipeService();
+  const {processRecipeDetails, processRecipes, addAllIngredientsToCart} =
+    useRecipeService();
 
   const buildRecipeUrl = () => {
     let url = '';

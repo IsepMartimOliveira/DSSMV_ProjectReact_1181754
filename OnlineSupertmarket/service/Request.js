@@ -161,7 +161,7 @@ export const deleteItem = async (username, hash, id) => {
   }
 };
 export const getTrivia = async () => {
-  const url = API_URL + 'food/trivia/random' + API_KEY;
+  const url = API_URL + '/food/trivia/random' + API_KEY;
   console.log(url);
 
   try {
