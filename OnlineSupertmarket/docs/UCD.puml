@@ -1,0 +1,37 @@
+@startuml
+left to right direction
+
+actor User
+rectangle "OnlineSupermarket"{
+rectangle "Account" {
+    User --> (Create an account)
+
+}
+
+rectangle "Recipe"{
+User --> (Show  recipes)
+User -->(Show ingredients off a recipe)
+User -->(Show details and summary of a recipe)
+
+}
+
+rectangle "Shopping List" {
+
+    User -->(Add an ingredient to the shopping list)
+    User -->(Add all ingredients to the shopping list)
+
+    User -->(Show the shopping list )
+    User -->(Remove an item from the shopping list)
+    User -->(Remove all items from the shopping list)
+
+}
+
+rectangle "Trivia"{
+User-->(Shake the screen and show a trivia)
+}
+rectangle "Checkout"{
+User-->(Able to define the spot to delivery)
+}
+
+
+@enduml

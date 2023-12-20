@@ -1,0 +1,42 @@
+@startuml
+autoactivate on
+autonumber
+title As a User i want to register an account
+autonumber
+actor "User" as US
+participant RegisterScreen as RP
+participant "UserService" as Request
+participant "Service" as RequestHTTP
+database "SpoonAcular API" as Server
+participant LoginScreen as Login
+
+
+US->RP:Inserts required data
+RP-->RP:checks if the data isn´t null
+RP->Request:handleLogin()
+note right
+userData refers to the user input
+  screens
+end note
+Request->RequestHTTP:processUser(userData)
+RequestHTTP->Server:POST
+Server-->RequestHTTP:response
+RequestHTTP-->Request:setUser(response)
+note right
+  It´s used UserContext to save
+  the different user info
+  username,hash and password
+  to be used in another
+  screens
+end note
+Request-->RP:ends request
+RP->Login:Navigates to Login Screen
+Login-->US:Displays LoginScreen
+note right
+It fills wit the
+userContext(username,password)
+in the screen
+
+end note
+
+@enduml
