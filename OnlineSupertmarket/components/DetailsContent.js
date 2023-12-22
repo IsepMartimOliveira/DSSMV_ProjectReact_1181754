@@ -1,7 +1,10 @@
 import React from 'react';
 import TextOutput from '../components/TextOutput';
+import { useSelector } from "react-redux";
 
-const DetailsContent = ({healthScore, spoonacularScore, pricePerServing}) => {
+const DetailsContent = () => {
+  const {healthScore, spoonacularScore,pricePerServing} = useSelector(state => state.recipes);
+
   return (
     <>
       <TextOutput textOutput={`Health Score: ${healthScore}`} />

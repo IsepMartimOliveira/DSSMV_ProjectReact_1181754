@@ -14,7 +14,7 @@ const MovementComponent = () => {
     setUpdateIntervalForType(SensorTypes.accelerometer, 400);
 
     const subscription = accelerometer.subscribe(({x, y, z}) => {
-      console.log('Accelerometer Data:', {x, y, z});
+      //console.log('Accelerometer Data:', {x, y, z});
 
       const movementThreshold = 15;
       if (

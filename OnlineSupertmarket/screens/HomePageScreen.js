@@ -6,7 +6,7 @@ import MovementComponent from '../components/MovementComponent';
 const HomePageScreen = () => {
   return (
     <View style={styles.container}>
-      <MovementComponent/>
+      <MovementComponent />
     </View>
   );
 };

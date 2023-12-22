@@ -3,35 +3,36 @@ import {
   StyleSheet,
   View,
   Button,
-  FlatList,
   Modal,
-  TouchableOpacity,
 } from 'react-native';
 import ModalSelector from 'react-native-modal-selector';
 import cuisines from '../others/Cuisines';
 import intolerances from '../others/Intolerances';
 import type from '../others/Type';
 import TextOutput from '../components/TextOutput';
-import ImageComponent from '../components/ImageComponent';
 import Title from '../components/Title';
 import ExpandableBox from '../components/ExpandableBox';
 import DetailsContent from '../components/DetailsContent';
 import SummaryContent from '../components/SummaryContent';
 import IngredientContent from '../components/IngridientsContent';
 import LoadingSpinner from '../components/LoadingSpinner';
-import useRecipeService from '../service/RecipeService';
+import {useDispatch, useSelector} from 'react-redux';
+import {getRecipeDetails, getRecipes} from '../service/Request';
+import {
+  setError,
+  setLoading,
+  setRecipes,
+  setRecipeDetails,
+} from '../reducer/actionRecipe';
+import RecipeList from '../components/RecipeList';
 
 const RecipeScreen = () => {
-  const [recipes, setRecipes] = useState([]);
   const [selectedCuisine, setSelectedCuisine] = useState('Select Cuisine');
-  const [selectedIntolerances, setselectedIntolerances] =
-    useState('Select Intolerance');
+  const [selectedIntolerances, setselectedIntolerances] = useState('Select Intolerance');
   const [selectedType, setselectedType] = useState('Select Type');
-  const [recipeDetails, setRecipeDetails] = useState(null);
   const [modalVisible, setModalVisible] = useState(false);
-  const [loading, setLoading] = useState(false);
-  const {processRecipeDetails, processRecipes, addAllIngredientsToCart} =
-    useRecipeService();
+  const dispatch = useDispatch();
+  const {loading, error, title} = useSelector(state => state.recipes);
 
   const buildRecipeUrl = () => {
     let url = '';
@@ -55,21 +56,36 @@ const RecipeScreen = () => {
   };
 
   const fetchRecipeDetails = async recipeId => {
-    await processRecipeDetails(
-      recipeId,
-      setLoading,
-      setRecipeDetails,
-      setModalVisible,
-    );
+    try {
+      dispatch(setLoading(true));
+
+      const details = await getRecipeDetails(recipeId);
+      console.log('Recipe Details:', details);
+
+      dispatch(setRecipeDetails(details));
+      setModalVisible(true);
+    } catch (error) {
+      dispatch(setError(error));
+    } finally {
+      dispatch(setLoading(false));
+    }
   };
 
   const handleAddAllIngredients = async () => {
-    await addAllIngredientsToCart(recipeDetails, setLoading, setModalVisible);
+    //await addAllIngredientsToCart(recipeDetails, setLoading, setModalVisible);
   };
 
   const handleGetRecipes = async () => {
     const url = buildRecipeUrl();
-    await processRecipes(url, selectedCuisine, setLoading, setRecipes);
+    try {
+      dispatch(setLoading(true));
+      const data = await getRecipes(url);
+      dispatch(setRecipes(data.results));
+    } catch (error) {
+      dispatch(setError(error));
+    } finally {
+      dispatch(setLoading(false));
+    }
   };
 
   return (
@@ -112,49 +128,21 @@ const RecipeScreen = () => {
         <Button title="Get Recipes" onPress={handleGetRecipes} />
       </View>
       <View style={styles.flatListContainer}>
-        <FlatList
-          data={recipes}
-          keyExtractor={item => item.id.toString()}
-          renderItem={({item}) => (
-            <View style={styles.recipeContainer}>
-              <TouchableOpacity onPress={() => fetchRecipeDetails(item.id)}>
-                <TextOutput textOutput={item.title} />
-                <ImageComponent imageUrl={item.image} />
-              </TouchableOpacity>
-            </View>
-          )}
-        />
+        <RecipeList fetchRecipeDetails={fetchRecipeDetails} />
         <Modal
           animationType="slide"
           transparent={false}
           visible={modalVisible}
           onRequestClose={() => setModalVisible(false)}>
           <View style={styles.modalContainer}>
-            {recipeDetails && (
+            {loading && <LoadingSpinner />}
+            {error && <TextOutput textOutput={`Error: ${error.message}`} />}
+            {!loading && !error && (
               <View>
-                <Title title={recipeDetails.title} />
-                <ExpandableBox
-                  title="Details"
-                  content={<DetailsContent {...recipeDetails} />}
-                />
-                <ExpandableBox
-                  title="Summary"
-                  content={<SummaryContent {...recipeDetails} />}
-                />
-
-                <ExpandableBox
-                  title="Ingredients"
-                  content={
-                    recipeDetails && recipeDetails.extendedIngredients ? (
-                      <FlatList
-                        data={recipeDetails.extendedIngredients}
-                        keyExtractor={(item, index) => index.toString()}
-                        renderItem={({item, index}) => (
-                          <IngredientContent key={index} {...item} />
-                        )}
-                      />
-                    ) : null
-                  }
+                <Title title={title} />
+                <ExpandableBox title="Details" content={<DetailsContent />} />
+                <ExpandableBox title="Summary" content={<SummaryContent />} />
+                <ExpandableBox title="Ingridient" content={<IngredientContent />}
                 />
                 <Button
                   style={styles.buttonAddAll}
