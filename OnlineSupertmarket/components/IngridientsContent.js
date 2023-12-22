@@ -1,24 +1,31 @@
-import React, {useState} from 'react';
-import {View, StyleSheet, Alert, TouchableOpacity} from 'react-native';
+import {
+  View,
+  StyleSheet,
+  Alert,
+  TouchableOpacity,
+  FlatList,
+} from 'react-native';
 import TextOutput from './TextOutput';
 import ImageIngridient from './ImageIngridient';
 import useRecipeService from '../service/RecipeService';
 import LoadingSpinner from './LoadingSpinner';
+import {useSelector} from 'react-redux';
+import {setLoading} from '../reducer/actionRecipe';
 
-const IngredientContent = ({name, image}) => {
+const IngredientContent = () => {
   const {addIngredientToCart} = useRecipeService();
-  const [loading, setLoading] = useState(false);
+  const {ingredients, loading} = useSelector(state => state.recipes);
 
-  const handleAdd = async () => {
+  const handleAdd = async name => {
     await addIngredientToCart(setLoading, name);
   };
-  const handleContainerPress = () => {
+  const handleContainerPress = name => {
     Alert.alert(
       'Add Ingredient',
       `Do you want to add ${name} to your cart?`,
       [
         {text: 'Cancel', style: 'cancel'},
-        {text: 'Add', onPress: handleAdd},
+        {text: 'Add', onPress: () => handleAdd(name)},
       ],
       {cancelable: true},
     );
@@ -26,25 +33,30 @@ const IngredientContent = ({name, image}) => {
 
   return (
     <View style={styles.container}>
-      <TouchableOpacity onPress={handleContainerPress} style={styles.container}>
-        {loading && <LoadingSpinner />}
-
-        <TextOutput textOutput={name} />
-        <ImageIngridient
-          imageUrl={'https://spoonacular.com/cdn/ingredients_100x100/' + image}
-          style={styles.image}
-        />
-      </TouchableOpacity>
+      <FlatList
+        data={ingredients}
+        keyExtractor={(item, index) => index.toString()}
+        renderItem={({item, index}) => (
+          <TouchableOpacity
+            onPress={() => handleContainerPress(item.name)}
+            style={styles.container}>
+            {loading && <LoadingSpinner />}
+            <TextOutput textOutput={item.name} />
+            <ImageIngridient
+              imageUrl={
+                'https://spoonacular.com/cdn/ingredients_100x100/' + item.image
+              }
+            />
+          </TouchableOpacity>
+        )}
+      />
     </View>
   );
 };
-
 const styles = StyleSheet.create({
   container: {
-    flexDirection: 'column',
     alignItems: 'center',
-    height: 500,
-    marginBottom: -250,
+    height: 250,
   },
 });
 
