@@ -29,7 +29,6 @@ const recipeReducer = (state = initialState, action) => {
       console.log('Ingridients', ingredients);
 
       return {
-
         ...state,
         ingredients,
         ...action.payload,

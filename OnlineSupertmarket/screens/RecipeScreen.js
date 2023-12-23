@@ -17,7 +17,7 @@ import SummaryContent from '../components/SummaryContent';
 import IngredientContent from '../components/IngridientsContent';
 import LoadingSpinner from '../components/LoadingSpinner';
 import {useDispatch, useSelector} from 'react-redux';
-import {getRecipeDetails, getRecipes} from '../service/Request';
+import { addIngredient, getRecipeDetails, getRecipes } from '../service/Request';
 import {
   setError,
   setLoading,
@@ -25,14 +25,19 @@ import {
   setRecipeDetails,
 } from '../reducer/actionRecipe';
 import RecipeList from '../components/RecipeList';
+import {useUser} from '../context/UserProvider';
+import { addShoppingCart } from '../reducer/actionsShoppingCart';
 
 const RecipeScreen = () => {
+  const {userData} = useUser();
   const [selectedCuisine, setSelectedCuisine] = useState('Select Cuisine');
   const [selectedIntolerances, setselectedIntolerances] = useState('Select Intolerance');
   const [selectedType, setselectedType] = useState('Select Type');
   const [modalVisible, setModalVisible] = useState(false);
   const dispatch = useDispatch();
-  const {loading, error, title} = useSelector(state => state.recipes);
+  const {loading, error, title, ingredients} = useSelector(
+    state => state.recipes,
+  );
 
   const buildRecipeUrl = () => {
     let url = '';
@@ -72,7 +77,23 @@ const RecipeScreen = () => {
   };
 
   const handleAddAllIngredients = async () => {
-    //await addAllIngredientsToCart(recipeDetails, setLoading, setModalVisible);
+    const {username, hash} = userData;
+
+    try {
+      dispatch(setLoading(true));
+      if (ingredients && ingredients.length > 0) {
+        for (const ingredient of ingredients) {
+          const {name} = ingredient;
+
+          const addAll = await addIngredient(username, hash, name)
+          dispatch(addShoppingCart(addAll));
+        }
+      }
+    } catch (error) {
+      dispatch(setError(error));
+    } finally {
+      dispatch(setLoading(false));
+    }
   };
 
   const handleGetRecipes = async () => {

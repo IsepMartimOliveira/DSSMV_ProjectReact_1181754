@@ -7,17 +7,33 @@ import {
 } from 'react-native';
 import TextOutput from './TextOutput';
 import ImageIngridient from './ImageIngridient';
-import useRecipeService from '../service/RecipeService';
 import LoadingSpinner from './LoadingSpinner';
-import {useSelector} from 'react-redux';
-import {setLoading} from '../reducer/actionRecipe';
+import {useDispatch, useSelector} from 'react-redux';
+import {setError, setLoading} from '../reducer/actionRecipe';
+import {addIngredient} from '../service/Request';
+import {useUser} from '../context/UserProvider';
+import {addShoppingCart} from '../reducer/actionsShoppingCart';
 
 const IngredientContent = () => {
-  const {addIngredientToCart} = useRecipeService();
+  const dispatch = useDispatch();
+
   const {ingredients, loading} = useSelector(state => state.recipes);
+  const {userData} = useUser();
 
   const handleAdd = async name => {
-    await addIngredientToCart(setLoading, name);
+    const {username, hash} = userData;
+    try {
+      dispatch(setLoading(true));
+
+      const add = await addIngredient(username, hash, name);
+      console.log('Add', add);
+
+      dispatch(addShoppingCart(add));
+    } catch (error) {
+      dispatch(setError(error));
+    } finally {
+      dispatch(setLoading(false));
+    }
   };
   const handleContainerPress = name => {
     Alert.alert(
@@ -37,10 +53,9 @@ const IngredientContent = () => {
         data={ingredients}
         keyExtractor={(item, index) => index.toString()}
         renderItem={({item, index}) => (
-          <TouchableOpacity
-            onPress={() => handleContainerPress(item.name)}
-            style={styles.container}>
+          <TouchableOpacity onPress={() => handleContainerPress(item.name)}>
             {loading && <LoadingSpinner />}
+
             <TextOutput textOutput={item.name} />
             <ImageIngridient
               imageUrl={
