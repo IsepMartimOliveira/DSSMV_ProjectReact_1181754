@@ -12,3 +12,15 @@ export const setError = payload => ({
   type: 'SET_ERROR',
   payload,
 });
+export const allItemsAdded = () => ({
+  type: 'ALL_ITEMS_ADDED_SUCCESSFULLY',
+});
+export const setItems = payload => ({
+  type: 'SET_ITEMS',
+  payload,
+});
+
+export const setDeleteItem = payload => ({
+  type: 'DELETE_ITEM',
+  payload,
+});

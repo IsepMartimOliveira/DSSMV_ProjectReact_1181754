@@ -17,7 +17,7 @@ import SummaryContent from '../components/SummaryContent';
 import IngredientContent from '../components/IngridientsContent';
 import LoadingSpinner from '../components/LoadingSpinner';
 import {useDispatch, useSelector} from 'react-redux';
-import { addIngredient, getRecipeDetails, getRecipes } from '../service/Request';
+import {addIngredient, getRecipeDetails, getRecipes} from '../service/Request';
 import {
   setError,
   setLoading,
@@ -26,7 +26,7 @@ import {
 } from '../reducer/actionRecipe';
 import RecipeList from '../components/RecipeList';
 import {useUser} from '../context/UserProvider';
-import { addShoppingCart } from '../reducer/actionsShoppingCart';
+import { addShoppingCart,  allItemsAdded } from '../reducer/actionsShoppingCart';
 
 const RecipeScreen = () => {
   const {userData} = useUser();
@@ -35,7 +35,7 @@ const RecipeScreen = () => {
   const [selectedType, setselectedType] = useState('Select Type');
   const [modalVisible, setModalVisible] = useState(false);
   const dispatch = useDispatch();
-  const {loading, error, title, ingredients} = useSelector(
+  const {loading, error, title, ingredients, successMessage} = useSelector(
     state => state.recipes,
   );
 
@@ -87,13 +87,16 @@ const RecipeScreen = () => {
 
           const addAll = await addIngredient(username, hash, name)
           dispatch(addShoppingCart(addAll));
+          console.log(successMessage)
         }
       }
+      dispatch(allItemsAdded());
     } catch (error) {
       dispatch(setError(error));
     } finally {
       dispatch(setLoading(false));
     }
+    console.log(successMessage);
   };
 
   const handleGetRecipes = async () => {
@@ -170,6 +173,7 @@ const RecipeScreen = () => {
                   title="Add all"
                   onPress={handleAddAllIngredients}
                 />
+                {successMessage && <TextOutput textOutput={successMessage} />}
               </View>
             )}
           </View>
