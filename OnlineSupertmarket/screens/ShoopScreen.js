@@ -5,15 +5,20 @@ import {useUser} from '../context/UserProvider';
 import {deleteItem, getShoppingCart} from '../service/Request';
 import ShoppingCartItem from '../components/ShoopingCartItem';
 import ShoppingCartActions from '../components/ShoppingCartActions';
+import {useDispatch, useSelector} from 'react-redux';
+import { setItems } from '../reducer/actionsShoppingCart';
+import { shoppingReducer } from "../reducer/shoppingReducer";
+
 
 const ShoppingCartScreen = ({route}) => {
   const {userData} = useUser();
-  const [names, setNames] = useState([]);
-  const [ids, setIds] = useState([]);
-  const [costs, setCosts] = useState([]);
-  const [totalCost, setTotalCost] = useState(0);
+  //const [ids, setIds] = useState([]);
   const navigation = useNavigation();
   const selectedStreet = route.params?.selectedStreet;
+  const dispatch = useDispatch();
+  const {items, totalCost, ingredientId} = useSelector(
+    state => state.shoppingCart,
+  );
   React.useEffect(() => {
     if (selectedStreet) {
       Alert.alert(
@@ -47,24 +52,9 @@ const ShoppingCartScreen = ({route}) => {
       }
 
       const response = await getShoppingCart(username, hash);
-      if (response) {
-        const {aisles, cost, id} = response;
-        const nameList = aisles.flatMap(aisle =>
-          aisle.items.map(item => item.name),
-        );
-        const idList = aisles.flatMap(aisle =>
-          aisle.items.map(item => item.id),
-        );
-        const costList = aisles.flatMap(aisle =>
-          aisle.items.map(item => item.cost),
-        );
-
-        setNames(nameList);
-        setIds(idList);
-        setCosts(costList);
-        const newTotalCost = costList.reduce((sum, cost) => sum + cost, 0);
-        setTotalCost(newTotalCost);
-      }
+      dispatch(setItems(response));
+      console.log(dispatch(setItems(response)));
+      console.log(ingredientId);
     } catch (error) {
       console.error('ErrorReq:', error);
     }
@@ -149,15 +139,15 @@ const ShoppingCartScreen = ({route}) => {
     <View style={styles.container}>
       <Text style={styles.title}>Shopping Cart Screen </Text>
 
-      {names.length > 0 ? (
+      {items && items.length > 0 ? (
         <>
           <FlatList
-            data={names}
-            keyExtractor={(item, index) => index.toString()}
+            data={items}
+            keyExtractor={(item, index) => item.id.toString()}
             renderItem={({item, index}) => (
               <ShoppingCartItem
-                name={item}
-                expectedCost={costs[index]}
+                name={item.name}
+                expectedCost={item.cost}
                 onPress={() => pressDelete(index)}
               />
             )}
@@ -165,7 +155,6 @@ const ShoppingCartScreen = ({route}) => {
           <Text style={styles.totalCost}>
             Total Cost: ${totalCost.toFixed(2)}
           </Text>
-
           <ShoppingCartActions
             onDeletePress={() => pressDeleteAll()}
             onCheckoutPress={() => handleCheckOut()}
