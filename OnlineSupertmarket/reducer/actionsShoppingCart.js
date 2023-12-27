@@ -20,7 +20,7 @@ export const setItems = payload => ({
   payload,
 });
 
-export const setDeleteItem = payload => ({
+export const setDeleteItem = newTotalCost => ({
   type: 'DELETE_ITEM',
-  payload,
+  payload: {newTotalCost},
 });

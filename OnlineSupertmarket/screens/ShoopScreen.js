@@ -6,7 +6,7 @@ import {deleteItem, getShoppingCart} from '../service/Request';
 import ShoppingCartItem from '../components/ShoopingCartItem';
 import ShoppingCartActions from '../components/ShoppingCartActions';
 import {useDispatch, useSelector} from 'react-redux';
-import { setItems } from '../reducer/actionsShoppingCart';
+import { setDeleteItem, setError, setItems } from "../reducer/actionsShoppingCart";
 import { shoppingReducer } from "../reducer/shoppingReducer";
 
 
@@ -16,7 +16,7 @@ const ShoppingCartScreen = ({route}) => {
   const navigation = useNavigation();
   const selectedStreet = route.params?.selectedStreet;
   const dispatch = useDispatch();
-  const {items, totalCost, ingredientId} = useSelector(
+  const {items, totalCost, ids} = useSelector(
     state => state.shoppingCart,
   );
   React.useEffect(() => {
@@ -54,9 +54,9 @@ const ShoppingCartScreen = ({route}) => {
       const response = await getShoppingCart(username, hash);
       dispatch(setItems(response));
       console.log(dispatch(setItems(response)));
-      console.log(ingredientId);
+      console.log(ids);
     } catch (error) {
-      console.error('ErrorReq:', error);
+      setError(error);
     }
   };
 
@@ -72,17 +72,19 @@ const ShoppingCartScreen = ({route}) => {
     try {
       const response = await deleteItem(username, hash, ids[index]);
       console.log(response);
+      console.log(ids)
       if (response.status === 'success') {
         Alert.alert(
           'Ingredients Deleted',
           'The ingredient have been deleted from your cart.',
         );
-        const newTotalCost = totalCost - costs[index];
-        setTotalCost(newTotalCost);
+        const deletedItemCost = items[index].cost;
+        const newTotalCost = totalCost - deletedItemCost;
+        dispatch(setDeleteItem(newTotalCost));
         fetchData();
       }
     } catch (error) {
-      console.error('Error deleting item:', error);
+      setError(error);
     }
   };
 
@@ -121,7 +123,7 @@ const ShoppingCartScreen = ({route}) => {
         const response = await deleteItem(username, hash, id);
         console.log(response);
         if (response.status !== 'success') {
-          console.error('Error deleting item:', response.error);
+          setError(response);
         }
       }
 
@@ -138,12 +140,11 @@ const ShoppingCartScreen = ({route}) => {
   return (
     <View style={styles.container}>
       <Text style={styles.title}>Shopping Cart Screen </Text>
-
       {items && items.length > 0 ? (
         <>
           <FlatList
             data={items}
-            keyExtractor={(item, index) => item.id.toString()}
+            keyExtractor={(item, index) => index.toString()}
             renderItem={({item, index}) => (
               <ShoppingCartItem
                 name={item.name}
