@@ -1,0 +1,27 @@
+@startuml
+title As a User I want to see the different ingredients
+
+actor User as User
+participant "RecipesScreen" as Screen
+participant "IngridientContent" as IC
+participant "Request" as Request
+database "Spoonacular API" as Server
+participant "Action" as AR
+participant "Reducer" as RD
+participant "Store" as Store
+User -> Screen:fetchRecipeDetails(recipeId)
+Screen->Request:getRecipeDetails(recipeId)
+Request->Server:GET Request
+Server->Request:details
+Request->Screen:details
+Screen->AR:setRecipeDetails(details)
+AR->RD:recipeReducer(initialState,actions)
+RD->Store
+Store-->Screen:ingridients
+Screen->IC:IngridientContent(title,content)
+note right
+Displays name and image
+on component
+end note
+IC-->User:Displays Ingridients
+@enduml

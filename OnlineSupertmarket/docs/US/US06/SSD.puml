@@ -1,0 +1,20 @@
+@startuml
+actor User as MD
+title As a User I want to display the added items
+activate MD
+
+MD -> ":System" : User goes to ShoppingCart
+activate ":System"
+
+alt Successful case - Data is accepted
+
+    ":System" --> ":System" : Data is processed
+    ":System" --> MD : Shows the different items
+else Failure case - Data is not accepted
+    ":System" --> ":System" : Data processing fails
+    ":System" --> MD : Shows error message
+end
+
+deactivate ":System"
+deactivate MD
+@enduml

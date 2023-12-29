@@ -1,0 +1,29 @@
+@startuml
+title As User i want to delete all items
+actor User as User
+
+actor User as User
+participant "ShoopingScreen" as Screen
+participant "Request" as Request
+database "Spoonacular API" as Server
+participant "Action" as AR
+participant "Reducer" as RD
+participant "Store" as Store
+
+User->Screen:handleDeleteAll()
+alt Loops in all items
+Screen->Request:deleteItem(username, hash, ids[index])
+Request->Server:DELETE Request
+Server-->Request:response
+Request-->Screen:response
+Screen->Screen:deletedItemCost = items[index].cost;
+Screen->Screen:newTotalCost = totalCost - deletedItemCost
+
+Screen->AR:setDeleteItem(newTotalCost)
+AR->RD:shoppingReducer(initialState, action)
+RD->Store:
+end alt
+Store-->Screen:totalCost
+Screen-->User:Delete items and remove total price
+
+@enduml

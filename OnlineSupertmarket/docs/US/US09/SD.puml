@@ -1,0 +1,21 @@
+@startuml
+title "As User, I want to get trivia by shaking the screen"
+actor User as User
+participant "HomePageScreen" as Screen
+participant "MovementComponent" as MP
+
+participant "Request" as Request
+database "Spoonacular API" as Server
+
+User->Screen:User navigates to HomePage
+Screen->MP:Acess component
+MP->Request:getTrivia()
+Request->Server:GET Request
+Server-->Request:response
+Request-->MP:setTriviaText(response)
+MP->MP:triviaText
+MP-->Screen:render component
+Screen-->User:Display message to user
+
+
+@enduml

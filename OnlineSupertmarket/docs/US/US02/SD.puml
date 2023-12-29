@@ -1,0 +1,35 @@
+@startuml
+actor User as User
+title As a User I want to see the different recipes
+
+participant "RecipesScreen" as Screen
+participant "RecipeList" as List
+
+participant "Request" as Request
+database "Spoonacular API" as Server
+participant "Action" as AR
+participant "Reducer" as RD
+participant "Store" as Store
+User->Screen:handleGetRecipes()
+Note left of Screen: userData\n(username, hash)
+Screen->Screen:buildRecipeUrl()
+Screen->Request:getRecipes(url)
+Request -> Server: GET request
+activate Server
+Server --> Request: data
+Request-->Screen:data
+deactivate Server
+Screen->AR:setRecipes(data.results)
+AR->RD:recipeReducer(initialState,actions)
+RD->"Store"
+note right
+Stores  data
+end note
+Store-->Screen:return data
+Screen->List
+note right
+Displays name and image
+on component
+end note
+List-->User:Displays in user screen
+@enduml

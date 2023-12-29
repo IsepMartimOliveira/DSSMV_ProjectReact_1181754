@@ -1,0 +1,25 @@
+@startuml
+actor User as User
+title As a User I want to add a ingredient from a recipe
+
+actor User as User
+participant "RecipesScreen" as Screen
+participant "IngridientContent" as IC
+participant "Request" as Request
+database "Spoonacular API" as Server
+participant "Action" as AR
+participant "Reducer" as RD
+participant "Store" as Store
+
+User->Screen:
+Screen->IC:handleAdd(name)
+IC->Request:addIngredient(username, hash, name)
+Request->Server:POST request
+Server-->Request:add
+Request-->IC:add
+IC->AR:addShoppingCart(add)
+AR->RD:recipeReducer(initialState,action)
+RD->Store:add to store
+Store-->User:Display message of success
+
+@enduml

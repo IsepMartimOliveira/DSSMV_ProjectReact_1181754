@@ -1,0 +1,31 @@
+@startuml
+title As a User I want to display the added items
+
+actor User as User
+
+actor User as User
+participant "ShoopingScreen" as Screen
+participant "Request" as Request
+database "Spoonacular API" as Server
+participant "Action" as AR
+participant "Reducer" as RD
+participant "Store" as Store
+
+User->Screen:fetchData
+Screen->Request:getShoppingCart(username, hash)
+Request->Server:GET Request
+Server-->Request:response
+Request-->Screen:response
+Screen->AR:setItems(response)
+AR->RD:shoppingReducer(initialState, action)
+RD->Store:
+Store-->Screen:items
+Screen->Screen:useFocusEffect(fetchData)
+note right
+Everytime the user
+Goes to the Shoopscreen it focus
+And this update it
+(calls fetchData)
+end note
+Screen-->User:Displays items
+@enduml
