@@ -1,5 +1,5 @@
 var API_URL = 'https://api.spoonacular.com';
-const API_KEY = '?apiKey=8731e20fa447459cba57412c132ca440';
+const API_KEY = '?apiKey=dd8dd2b3b2e64a49956cc10427a2b50f';
 //8d7e8f2c62fb434182d0bc9f11914e08
 //8731e20fa447459cba57412c132ca440
 //7e93008d8c034f0ca12b7face33bc4b8

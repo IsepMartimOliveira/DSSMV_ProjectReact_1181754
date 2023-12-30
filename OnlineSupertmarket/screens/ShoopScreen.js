@@ -6,26 +6,24 @@ import {deleteItem, getShoppingCart} from '../service/Request';
 import ShoppingCartItem from '../components/ShoopingCartItem';
 import ShoppingCartActions from '../components/ShoppingCartActions';
 import {useDispatch, useSelector} from 'react-redux';
-import { setDeleteItem, setError, setItems } from "../reducer/actionsShoppingCart";
-import { shoppingReducer } from "../reducer/shoppingReducer";
+import {
+  setDeleteItem,
+  setError,
+  setItems,
+} from '../reducer/actionsShoppingCart';
 
-
-const ShoppingCartScreen = ({route}) => {
+const ShoppingCartScreen = () => {
   const {userData} = useUser();
-  //const [ids, setIds] = useState([]);
   const navigation = useNavigation();
-  const selectedStreet = route.params?.selectedStreet;
   const dispatch = useDispatch();
-  const {items, totalCost, ids} = useSelector(
-    state => state.shoppingCart,
-  );
+  const {items, totalCost, ids} = useSelector(state => state.shoppingCart);
+  const {selectedStreet}=useSelector(state => state.map);
+  console.log('Street', selectedStreet);
   React.useEffect(() => {
     if (selectedStreet) {
       Alert.alert(
         'Checkout',
-        `Adress: ${selectedStreet.street}\nTotal Cost: $${totalCost.toFixed(
-          2,
-        )}`,
+        `Adress: ${selectedStreet.street}\nTotal Cost: $${totalCost.toFixed(2)}`,
         [
           {
             text: 'OK',
@@ -72,7 +70,7 @@ const ShoppingCartScreen = ({route}) => {
     try {
       const response = await deleteItem(username, hash, ids[index]);
       console.log(response);
-      console.log(ids)
+      console.log(ids);
       if (response.status === 'success') {
         Alert.alert(
           'Ingredients Deleted',

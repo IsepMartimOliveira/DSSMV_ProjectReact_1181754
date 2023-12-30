@@ -1,9 +1,11 @@
 import React from 'react';
 import TextOutput from '../components/TextOutput';
-import { useSelector } from "react-redux";
+import {useSelector} from 'react-redux';
 
 const DetailsContent = () => {
-  const {healthScore, spoonacularScore,pricePerServing} = useSelector(state => state.recipes);
+  const {healthScore, spoonacularScore, pricePerServing} = useSelector(
+    state => state.recipes,
+  );
 
   return (
     <>

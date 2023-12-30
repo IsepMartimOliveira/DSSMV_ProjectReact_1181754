@@ -5,12 +5,11 @@ const ShoppingCartItem = ({name, expectedCost, onPress}) => {
   console.log('Item props:', name, expectedCost);
   return (
     <TouchableOpacity onPress={onPress}>
-    <View style={styles.container}>
-      <Text style={styles.name}>{name}</Text>
-      <Text style={styles.cost}>Expected Cost: {expectedCost}</Text>
-    </View>
+      <View style={styles.container}>
+        <Text style={styles.name}>{name}</Text>
+        <Text style={styles.cost}>Expected Cost: {expectedCost}</Text>
+      </View>
     </TouchableOpacity>
-
   );
 };
 

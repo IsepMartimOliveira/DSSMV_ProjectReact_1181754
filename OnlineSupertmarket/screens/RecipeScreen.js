@@ -87,7 +87,7 @@ const RecipeScreen = () => {
 
           const addAll = await addIngredient(username, hash, name)
           dispatch(addShoppingCart(addAll));
-          console.log(successMessage)
+          console.log(successMessage);
         }
       }
       dispatch(allItemsAdded());
