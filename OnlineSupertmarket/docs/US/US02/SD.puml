@@ -21,10 +21,7 @@ Request-->Screen:data
 deactivate Server
 Screen->AR:setRecipes(data.results)
 AR->RD:recipeReducer(initialState,actions)
-RD->"Store"
-note right
-Stores  data
-end note
+RD->"Store":Stores data
 Store-->Screen:return data
 Screen->List
 note right

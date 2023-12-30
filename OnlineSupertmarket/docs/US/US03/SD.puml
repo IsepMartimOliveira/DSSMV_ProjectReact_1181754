@@ -16,7 +16,7 @@ Server->Request:details
 Request->Screen:details
 Screen->AR:setRecipeDetails(details)
 AR->RD:recipeReducer(initialState,actions)
-RD->Store
+RD->Store: Store details
 Store-->Screen:ingridients
 Screen->IC:IngridientContent(title,content)
 note right

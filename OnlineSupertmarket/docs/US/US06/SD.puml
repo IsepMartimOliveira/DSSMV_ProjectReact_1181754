@@ -18,7 +18,7 @@ Server-->Request:response
 Request-->Screen:response
 Screen->AR:setItems(response)
 AR->RD:shoppingReducer(initialState, action)
-RD->Store:
+RD->Store:Store items
 Store-->Screen:items
 Screen->Screen:useFocusEffect(fetchData)
 note right

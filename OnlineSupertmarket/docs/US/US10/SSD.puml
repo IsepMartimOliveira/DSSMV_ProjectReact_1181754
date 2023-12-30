@@ -1,14 +1,14 @@
 @startuml
 actor User as MD
-title As a User I want to display trivia
+title As a User I want to do checkout
 activate MD
 
-MD -> ":System" : User shakes the screen
+MD -> ":System" : User returns to the ShoopScreen
 activate ":System"
 
 alt Successful case - Data is accepted
     ":System" --> ":System" : Data is processed
-    ":System" --> MD : Shows the trivia
+    ":System" --> MD : Shows total cost and street
 else Failure case - Data is not accepted
     ":System" --> MD : Shows error message
 end

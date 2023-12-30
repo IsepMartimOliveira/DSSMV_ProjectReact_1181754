@@ -21,7 +21,7 @@ Screen->Screen:newTotalCost = totalCost - deletedItemCost
 
 Screen->AR:setDeleteItem(newTotalCost)
 AR->RD:shoppingReducer(initialState, action)
-RD->Store:
+RD->Store: updates totalCost
 end alt
 Store-->Screen:totalCost
 Screen-->User:Delete items and remove total price

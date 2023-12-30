@@ -1,0 +1,28 @@
+@startuml
+title "As User, I want to do the chekout"
+actor User as User
+participant "ShoopScreen" as SC
+participant "MapScreen" as Screen
+
+participant "Request" as Request
+database "Google API" as Server
+participant "Action" as AR
+participant "Reducer" as RD
+participant "Store" as Store
+
+
+User->Screen:User presses checkout
+Screen->Request:request
+Request->Server:GET Request
+Server-->Request:response
+Request-->Screen:response
+Screen-->User:Displays map
+User->Screen:presses map
+Screen->AR:setSelectedStreet(selectedStreet)
+AR->RD:mapReducer(state,action)
+RD->Store:stores selectedStreet
+Store-->SC:selectedStreet
+SC->User:Displays to User
+
+
+@enduml
