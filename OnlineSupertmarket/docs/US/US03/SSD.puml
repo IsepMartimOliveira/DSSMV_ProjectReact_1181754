@@ -4,7 +4,7 @@ actor "User" as MD
 title As a User i want to display the ingredients
 
 activate MD
-MD -> ":System" : User clicks on  question mark
+MD -> ":System" : User clicks on  expendable box
 ":System" --> ":System" : Gets data
 ":System" --> ":System" : Validates data(can not be null)
 alt successful case - data is accepted

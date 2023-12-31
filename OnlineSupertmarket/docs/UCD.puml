@@ -30,7 +30,7 @@ rectangle "Trivia"{
 User-->(Shake the screen and show a trivia)
 }
 rectangle "Checkout"{
-User-->(Able to define the spot to delivery)
+User-->(Able to define the adress of delivery)
 }
 
 

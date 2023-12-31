@@ -4,7 +4,7 @@ actor "User" as MD
 title As a User i want to choose a Recepie
 
 activate MD
-MD -> ":System" : User chooses  data in the different Spinners
+MD -> ":System" : User chooses  data by different criteria
 ":System" --> ":System" : Gets data
 ":System" --> ":System" : Validates data(can not be null)
 alt successful case - data is accepted

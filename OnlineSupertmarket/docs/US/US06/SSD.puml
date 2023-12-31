@@ -3,7 +3,7 @@ actor User as MD
 title As a User I want to display the added items
 activate MD
 
-MD -> ":System" : User goes to ShoppingCart
+MD -> ":System" : User goes to ShoppingScreen
 activate ":System"
 
 alt Successful case - Data is accepted

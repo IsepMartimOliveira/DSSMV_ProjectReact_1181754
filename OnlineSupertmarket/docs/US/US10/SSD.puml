@@ -8,7 +8,7 @@ activate ":System"
 
 alt Successful case - Data is accepted
     ":System" --> ":System" : Data is processed
-    ":System" --> MD : Shows total cost and street
+    ":System" --> MD : Shows total cost and adress
 else Failure case - Data is not accepted
     ":System" --> MD : Shows error message
 end
