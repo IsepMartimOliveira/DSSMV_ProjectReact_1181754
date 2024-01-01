@@ -1,15 +1,16 @@
-import React from 'react';
+import React, { useState } from "react";
 import {View, StyleSheet, Button, Alert} from 'react-native';
 import MapView, {Marker} from 'react-native-maps';
 import {useNavigation} from '@react-navigation/native';
 import Geocoder from 'react-native-geocoding';
 import {useDispatch, useSelector} from 'react-redux';
-import {setAdress, setSelectedStreet,setDisplay} from '../reducer/actionMap';
+import {setSelectedStreet,setDisplay} from '../reducer/actionMap';
 
 const MapComponent = () => {
   const navigation = useNavigation();
   const dispatch = useDispatch();
-  const {streetAdress} = useSelector(state => state.map);
+  const [localStreetAddress, setLocalStreetAddress] = useState(null);
+
 
   const handleMapPress = async event => {
     const {coordinate} = event.nativeEvent;
@@ -20,7 +21,8 @@ const MapComponent = () => {
         coordinate.longitude,
       );
       const address = results.results[0].formatted_address;
-      dispatch(setAdress({coordinate, street: address}));
+      setLocalStreetAddress({coordinate, street: address});
+
       dispatch(setSelectedStreet({street: address}));
 
       Alert.alert('Marker Added', `Street: ${address}`);
@@ -40,11 +42,11 @@ const MapComponent = () => {
         showsUserLocation
         onPress={handleMapPress}
         provider={MapView.PROVIDER_GOOGLE}>
-        {streetAdress && (
+        {localStreetAddress && (
           <Marker
-            coordinate={streetAdress.coordinate}
+            coordinate={localStreetAddress.coordinate}
             title="Selected Marker"
-            description={`Street: ${streetAdress.street}`}
+            description={`Street: ${localStreetAddress.street}`}
           />
         )}
       </MapView>

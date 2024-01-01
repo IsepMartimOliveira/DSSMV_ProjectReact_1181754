@@ -1,4 +1,4 @@
-import React, {useState} from 'react';
+import React from 'react';
 import {View, FlatList, Text, Alert, StyleSheet} from 'react-native';
 import {useFocusEffect, useNavigation} from '@react-navigation/native';
 import {useUser} from '../context/UserProvider';
@@ -11,7 +11,7 @@ import {
   setError,
   setItems,
 } from '../reducer/actionsShoppingCart';
-import { setDisplay} from "../reducer/actionMap";
+import {setDisplay} from '../reducer/actionMap';
 
 const ShoppingCartScreen = () => {
   const {userData} = useUser();
