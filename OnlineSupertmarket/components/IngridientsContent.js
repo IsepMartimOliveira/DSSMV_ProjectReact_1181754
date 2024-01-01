@@ -9,7 +9,7 @@ import TextOutput from './TextOutput';
 import ImageIngridient from './ImageIngridient';
 import LoadingSpinner from './LoadingSpinner';
 import {useDispatch, useSelector} from 'react-redux';
-import {setError, setLoading} from '../reducer/actionRecipe';
+import { setError, setLoading, setSuccessMessage } from "../reducer/actionRecipe";
 import {addIngredient} from '../service/Request';
 import {useUser} from '../context/UserProvider';
 import {addShoppingCart} from '../reducer/actionsShoppingCart';
@@ -29,6 +29,7 @@ const IngredientContent = () => {
       console.log('Add', add);
 
       dispatch(addShoppingCart(add));
+      Alert.alert('Success', 'Ingredients added with  success!');
     } catch (error) {
       dispatch(setError(error));
     } finally {

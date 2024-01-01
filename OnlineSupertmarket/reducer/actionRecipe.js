@@ -17,3 +17,7 @@ export const setRecipeDetails = details => ({
   type: 'SET_RECIPE_DETAILS',
   payload: details,
 });
+export const setSuccessMessage = message => ({
+  type: 'SET_RECIPE_DETAILS',
+  payload: message,
+});

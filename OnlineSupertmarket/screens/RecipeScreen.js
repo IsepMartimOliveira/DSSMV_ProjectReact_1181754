@@ -3,8 +3,8 @@ import {
   StyleSheet,
   View,
   Button,
-  Modal,
-} from 'react-native';
+  Modal, Alert,
+} from "react-native";
 import ModalSelector from 'react-native-modal-selector';
 import cuisines from '../others/Cuisines';
 import intolerances from '../others/Intolerances';
@@ -26,7 +26,7 @@ import {
 } from '../reducer/actionRecipe';
 import RecipeList from '../components/RecipeList';
 import {useUser} from '../context/UserProvider';
-import { addShoppingCart,  allItemsAdded } from '../reducer/actionsShoppingCart';
+import {addShoppingCart, allItemsAdded} from '../reducer/actionsShoppingCart';
 
 const RecipeScreen = () => {
   const {userData} = useUser();
@@ -91,6 +91,8 @@ const RecipeScreen = () => {
         }
       }
       dispatch(allItemsAdded());
+      Alert.alert('Success', 'All ingredients added successfully!');
+
     } catch (error) {
       dispatch(setError(error));
     } finally {
@@ -173,7 +175,6 @@ const RecipeScreen = () => {
                   title="Add all"
                   onPress={handleAddAllIngredients}
                 />
-                {successMessage && <TextOutput textOutput={successMessage} />}
               </View>
             )}
           </View>
