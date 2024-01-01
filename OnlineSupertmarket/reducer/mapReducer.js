@@ -2,6 +2,7 @@ const initialState = {
   text: null,
   streetAdress: null,
   selectedStreet: null,
+  display:false,
 };
 
 const mapReducer = (state = initialState, action) => {
@@ -27,6 +28,11 @@ const mapReducer = (state = initialState, action) => {
         ...state,
         error: action.payload,
         loading: false,
+      };
+    case 'SET_DISPLAY':
+      return {
+        ...state,
+        display: action.payload,
       };
     default:
       return state;

@@ -11,31 +11,35 @@ import {
   setError,
   setItems,
 } from '../reducer/actionsShoppingCart';
+import { setDisplay} from "../reducer/actionMap";
 
 const ShoppingCartScreen = () => {
   const {userData} = useUser();
   const navigation = useNavigation();
   const dispatch = useDispatch();
   const {items, totalCost, ids} = useSelector(state => state.shoppingCart);
-  const {selectedStreet}=useSelector(state => state.map);
-  console.log('Street', selectedStreet);
+  const {selectedStreet, display} = useSelector(state => state.map);
+  console.log('Before', selectedStreet);
   React.useEffect(() => {
-    if (selectedStreet) {
+    if (display === true) {
       Alert.alert(
         'Checkout',
-        `Adress: ${selectedStreet.street}\nTotal Cost: $${totalCost.toFixed(2)}`,
+        `Address: ${selectedStreet.street}\nTotal Cost: $${totalCost.toFixed(2)}`,
         [
           {
             text: 'OK',
             onPress: () => {
               handleDeleteAll();
+              dispatch(setDisplay(false));
             },
           },
         ],
         {cancelable: false},
       );
     }
-  }, [selectedStreet]);
+  }, [selectedStreet, display]);
+
+  console.log('After', selectedStreet);
   const fetchData = async () => {
     try {
       if (!userData) {

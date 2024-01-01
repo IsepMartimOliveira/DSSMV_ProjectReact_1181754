@@ -4,7 +4,7 @@ import MapView, {Marker} from 'react-native-maps';
 import {useNavigation} from '@react-navigation/native';
 import Geocoder from 'react-native-geocoding';
 import {useDispatch, useSelector} from 'react-redux';
-import {setAdress, setSelectedStreet} from '../reducer/actionMap';
+import {setAdress, setSelectedStreet,setDisplay} from '../reducer/actionMap';
 
 const MapComponent = () => {
   const navigation = useNavigation();
@@ -29,6 +29,7 @@ const MapComponent = () => {
     }
   };
   const handleReturn = () => {
+    dispatch(setDisplay(true));
     navigation.navigate('Shoop');
   };
 
