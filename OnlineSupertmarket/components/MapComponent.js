@@ -1,16 +1,15 @@
-import React, { useState } from "react";
+import React, {useState} from 'react';
 import {View, StyleSheet, Button, Alert} from 'react-native';
 import MapView, {Marker} from 'react-native-maps';
 import {useNavigation} from '@react-navigation/native';
 import Geocoder from 'react-native-geocoding';
 import {useDispatch, useSelector} from 'react-redux';
-import {setSelectedStreet,setDisplay} from '../reducer/actionMap';
+import {setSelectedStreet, setDisplay} from '../reducer/actionMap';
 
 const MapComponent = () => {
   const navigation = useNavigation();
   const dispatch = useDispatch();
   const [localStreetAddress, setLocalStreetAddress] = useState(null);
-
 
   const handleMapPress = async event => {
     const {coordinate} = event.nativeEvent;

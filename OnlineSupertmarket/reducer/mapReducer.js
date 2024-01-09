@@ -1,18 +1,11 @@
 const initialState = {
   text: null,
-  streetAdress: null,
   selectedStreet: null,
-  display:false,
+  display: false,
 };
 
 const mapReducer = (state = initialState, action) => {
   switch (action.type) {
-    case 'SET_ADRESS':
-      return {
-        ...state,
-        ...action.payload,
-      };
-
     case 'SET_SELECTED_STREET':
       return {
         ...state,

@@ -85,7 +85,7 @@ const RecipeScreen = () => {
         for (const ingredient of ingredients) {
           const {name} = ingredient;
 
-          const addAll = await addIngredient(username, hash, name)
+          const addAll = await addIngredient(username, hash, name);
           dispatch(addShoppingCart(addAll));
           console.log(successMessage);
         }

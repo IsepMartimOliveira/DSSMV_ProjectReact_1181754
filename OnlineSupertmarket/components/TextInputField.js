@@ -8,6 +8,7 @@ const TextInputField = ({
   onChangeText,
   keyboardType,
   error,
+  secureTextEntry,
 }) => {
   return (
     <View style={styles.container}>
@@ -17,6 +18,7 @@ const TextInputField = ({
         value={value}
         onChangeText={onChangeText}
         keyboardType={keyboardType}
+        secureTextEntry={secureTextEntry}
       />
       {error && <Text style={styles.errorText}>{error}</Text>}
     </View>

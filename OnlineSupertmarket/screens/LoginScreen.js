@@ -49,7 +49,6 @@ const LoginScreen = () => {
         placeholder="Password"
         secureTextEntry={true}
         autoCorrect={false}
-        password={true}
         value={password}
         onChangeText={text => setPassword(text)}
       />
