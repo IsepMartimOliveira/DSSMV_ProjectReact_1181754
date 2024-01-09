@@ -12,8 +12,8 @@ participant "Store" as Store
 User -> Screen:fetchRecipeDetails(recipeId)
 Screen->Request:getRecipeDetails(recipeId)
 Request->Server:GET Request
-Server->Request:details
-Request->Screen:details
+Server-->Request:details
+Request-->Screen:details
 Screen->AR:setRecipeDetails(details)
 AR->RD:recipeReducer(initialState,actions)
 RD->Store: Store details
